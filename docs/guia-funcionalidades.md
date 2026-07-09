@@ -150,3 +150,10 @@ Página principal con secciones:
 3. Prueba el endpoint con datos reales
 4. Arranca el frontend: `ng serve` *(Terminal normal)*
 5. Prueba el flujo completo en el navegador
+
+---
+
+### Después del merge
+
+Cuando tu PR se fusione, borra la rama y crea una nueva desde `main` actualizado.
+Ver [`CONTRIBUTING.md`](../CONTRIBUTING.md#despu%C3%A9s-del-merge-c%C3%B3mo-empezar-la-siguiente-iteraci%C3%B3n).

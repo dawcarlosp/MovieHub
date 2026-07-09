@@ -245,3 +245,10 @@ Si ves que una guía se queda obsoleta o alguien comete un error que no estaba c
 | `ng test --watch=false` | Terminal normal | Ejecutar tests frontend |
 | `dotnet ef migrations has-pending-model-changes` | Terminal normal | Verificar si faltan migraciones |
 | `act` | Terminal normal | Ejecutar pipeline GitHub Actions en local |
+
+---
+
+### Después del merge
+
+Cuando tu PR se fusione, borra la rama y crea una nueva desde `main` actualizado.
+Ver [`CONTRIBUTING.md`](../CONTRIBUTING.md#despu%C3%A9s-del-merge-c%C3%B3mo-empezar-la-siguiente-iteraci%C3%B3n).

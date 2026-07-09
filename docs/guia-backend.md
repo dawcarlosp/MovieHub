@@ -260,3 +260,10 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreatePeliculaValidator>();
 2. Abre Swagger: `https://localhost:7154/swagger`
 3. Prueba cada endpoint con datos reales
 4. Verifica que los códigos HTTP son correctos (200, 201, 404, 400)
+
+---
+
+### Después del merge
+
+Cuando tu PR se fusione, borra la rama y crea una nueva desde `main` actualizado.
+Ver [`CONTRIBUTING.md`](../CONTRIBUTING.md#despu%C3%A9s-del-merge-c%C3%B3mo-empezar-la-siguiente-iteraci%C3%B3n).

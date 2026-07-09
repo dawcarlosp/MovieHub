@@ -8,6 +8,12 @@ Guía para que los 5 integrantes trabajemos sin pisarnos el código. Léela ante
 Si tienes prisa, haz esto todos los días:
 
 ```text
+🔄 0. DESPUÉS DE UN MERGE (solo si tu PR anterior se fusionó)
+   ├── git checkout main
+   ├── git pull origin main
+   ├── git branch -d feature/tu-rama
+   └── git checkout -b feature/tu-rama
+
 📥 1. TRAER CAMBIOS (En main)
    ├── git checkout main
    └── git pull origin main
@@ -87,6 +93,36 @@ Reglas:
 - Si el revisor pide cambios, corrígelos en la misma rama (nuevos commits) y vuelve a pedir revisión.
 - Solo se fusiona cuando el PR está aprobado y, cuando exista, la pipeline de GitHub Actions esté en verde.
 
+## Después del merge: cómo empezar la siguiente iteración
+
+Cuando tu PR se fusiona en `main`, la rama de trabajo ya no sirve para la siguiente ronda. Si sigues usándola, el próximo PR tendrá conflictos porque git no sabrá qué cambios son nuevos.
+
+### Al terminar el merge
+
+```bash
+# 1. Muévete a main y tráete los últimos cambios
+git checkout main
+git pull origin main
+
+# 2. Elimina la rama local (ya no la necesitas)
+git branch -d feature/tu-rama
+
+# 3. Crea una rama nueva desde el main actualizado
+git checkout -b feature/tu-rama
+```
+
+### Regla
+
+> **No reutilices ramas.** Cada iteración = rama nueva desde `main`. La rama anterior se borra local y remotamente tras el merge.
+
+GitHub suele borrar la rama remota automáticamente al mergear el PR. Si no lo hace, bórrala manualmente:
+
+```bash
+git push origin --delete feature/tu-rama
+```
+
+---
+
 ## Zonas de riesgo (archivos que varias personas pueden tocar)
 
 Generan la mayoría de los conflictos si no se coordina. Avisa en el grupo antes de modificarlos:
@@ -154,4 +190,5 @@ flowchart LR
     E -->|Cambios solicitados| B
     E -->|Aprobado| F[Merge a main]
     F --> G[Eliminar rama]
+    G -.->|Siguiente iteración| A
 ```

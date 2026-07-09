@@ -273,3 +273,10 @@ Componentes que seguramente uses:
 | `ng g c features/peliculas/pages/listado-peliculas --standalone` | Generar componente |
 | `ng g s features/peliculas/services/pelicula` | Generar servicio |
 | `ng add @angular/material` | Añadir Angular Material |
+
+---
+
+### Después del merge
+
+Cuando tu PR se fusione, borra la rama y crea una nueva desde `main` actualizado.
+Ver [`CONTRIBUTING.md`](../CONTRIBUTING.md#despu%C3%A9s-del-merge-c%C3%B3mo-empezar-la-siguiente-iteraci%C3%B3n).
