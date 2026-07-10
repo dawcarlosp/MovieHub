@@ -13,15 +13,17 @@ Rol asignado: **[@pablorequinto95-dotcom](https://github.com/pablorequinto95-dot
 
 ---
 
-## 1. Tests del backend
+## 1. Tests del backend — **Pendiente de crear**
 
-### Tecnología
+> ⚠️ El proyecto `MovieHubAPI.Tests` **no existe aún**. Está por crear.
+
+### Tecnología (propuesta)
 
 - **xUnit** (framework de tests)
 - **Moq** (mocking de dependencias)
-- El proyecto de tests se crea aparte: `dotnet new xunit -n MovieHubAPI.Tests`
+- Crear el proyecto: `dotnet new xunit -n MovieHubAPI.Tests`
 
-### Estructura
+### Estructura (propuesta)
 
 ```
 MovieHubAPI.Tests/
@@ -94,16 +96,7 @@ dotnet test --verbosity detailed                       # Más información en fa
 
 ### Tecnología
 
-Por defecto Angular usa **Karma + Jasmine**, pero se recomienda migrar a **Jest** (más rápido, mejor DX).
-
-Para configurar Jest *(Terminal normal)*:
-
-```bash
-npm remove karma karma-chrome-launcher karma-jasmine karma-jasmine-html-reporter
-npm install --save-dev jest @types/jest
-```
-
-O puedes mantener Jasmine si el equipo prefiere no cambiar.
+Angular 22 usa **Vitest** por defecto (el `tsconfig.spec.json` referencia `vitest/globals`). No hace falta instalar Karma, Jasmine ni Jest.
 
 ### Qué testear
 
@@ -113,52 +106,49 @@ O puedes mantener Jasmine si el equipo prefiere no cambiar.
 | **Servicios** | "getAll() devuelve lista de películas mockeadas" |
 | **Pipes/Filtros** | "filtroPorGenero filtra correctamente" |
 
-### Ejemplo con Jasmine
+### Ejemplo con Vitest
 
 ```typescript
+import { describe, it, expect, beforeEach } from 'vitest';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ListadoPeliculasComponent } from './listado-peliculas.component';
+
 describe('ListadoPeliculasComponent', () => {
   let component: ListadoPeliculasComponent;
   let fixture: ComponentFixture<ListadoPeliculasComponent>;
-  let mockService: jasmine.SpyObj<PeliculaService>;
 
-  beforeEach(() => {
-    mockService = jasmine.createSpyObj('PeliculaService', ['getAll']);
-    mockService.getAll.and.returnValue(of([{ id: 1, titulo: 'Test' }]));
-
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [ListadoPeliculasComponent],
-      providers: [{ provide: PeliculaService, useValue: mockService }],
-    });
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ListadoPeliculasComponent);
     component = fixture.componentInstance;
   });
 
-  it('should load peliculas on init', () => {
-    fixture.detectChanges();
-    expect(component.peliculas().length).toBe(1);
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 });
 ```
 
 ### Cómo ejecutar los tests
 
-**Desde Visual Studio:** Test Explorer también detecta tests de Angular si configuras la integración.
-
-**Por terminal** *(Terminal normal — View → Terminal en VS, Ctrl+` en VS Code, PowerShell, CMD o Windows Terminal)*:
+**Por terminal** *(Terminal normal)*:
 
 ```bash
-ng test                    # Karma
-npx jest                   # Si migraste a Jest
+ng test
 ```
 
 ---
 
-## 3. GitHub Actions (CI/CD)
+## 3. GitHub Actions (CI/CD) — **Pendiente de crear**
 
-La pipeline ya está creada en `.github/workflows/`. Revísala y completa lo que falte.
+> ⚠️ El directorio `.github/workflows/` **está vacío**. No hay pipeline configurada aún.
 
-### Estructura típica
+### Estructura propuesta
+
+Crea un archivo `.github/workflows/ci.yml`:
 
 ```yaml
 name: CI
@@ -196,12 +186,12 @@ jobs:
         run: dotnet test MovieHubAPI --no-build --verbosity normal
 ```
 
-### Checklist para la pipeline
+### Checklist para la pipeline (cuando se cree)
 
 - [ ] Compila el backend (`dotnet build` *(Terminal normal)*)
 - [ ] Compila el frontend (`ng build` *(Terminal normal)*)
-- [ ] Pasan los tests del backend (`dotnet test` *(Terminal normal)* o Test Explorer)
-- [ ] Pasan los tests del frontend (`ng test --watch=false --browsers=ChromeHeadless` *(Terminal normal)*)
+- [ ] Pasan los tests del backend (`dotnet test` *(Terminal normal)*)
+- [ ] Pasan los tests del frontend (`ng test` *(Terminal normal)*)
 
 ---
 
@@ -240,11 +230,10 @@ Si ves que una guía se queda obsoleta o alguien comete un error que no estaba c
 ## Resumen de comandos
 
 | Comando | Consola | Qué hace |
-|---|---|---|
-| `dotnet test MovieHubAPI.Tests` | Terminal normal | Ejecutar tests backend |
-| `ng test --watch=false` | Terminal normal | Ejecutar tests frontend |
-| `dotnet ef migrations has-pending-model-changes` | Terminal normal | Verificar si faltan migraciones |
-| `act` | Terminal normal | Ejecutar pipeline GitHub Actions en local |
+|---|---|---|---|
+| `dotnet test MovieHubAPI.Tests` | Terminal normal | Ejecutar tests backend (cuando exista el proyecto) |
+| `ng test` | Terminal normal | Ejecutar tests frontend (Vitest) |
+| `dotnet ef migrations has-pending-model-changes` | Package Manager Console | Verificar si faltan migraciones |
 
 ---
 
