@@ -36,16 +36,18 @@ Si haces las dos capas a la vez y algo falla, no sabrás si el error está en ba
 
 ## Funcionalidades concretas del proyecto
 
-### Valoraciones (1-5 estrellas)
+### Valoraciones (1-5 estrellas) — **Pendiente de implementar**
 
-**Backend:**
+**Modelo existente:** `ValoracionModel` con campos `UsuarioId`, `PeliculaId`, `Puntuacion` (1-5) y `Fecha`.
+
+**Backend (por hacer):**
 
 ```csharp
-// DTOs
-public record CreateValoracionDto(int PeliculaId, int Puntuacion);  // 1-5
+// DTOs (por crear)
+public record CreateValoracionDto(int PeliculaId, int Puntuacion);
 public record ValoracionDto(int Id, string UsuarioEmail, int Puntuacion);
 
-// Endpoints
+// Endpoints (por crear en un nuevo ValoracionesController)
 POST   /api/valoraciones           // crear valoración (requiere auth)
 PUT    /api/valoraciones/{id}      // modificar valoración
 DELETE /api/valoraciones/{id}      // eliminar valoración
@@ -54,7 +56,7 @@ GET    /api/peliculas/{id}/valoraciones  // obtener valoraciones de una películ
 
 > La `PuntuacionMedia` de la película se recalcula automáticamente tras cada valoración. Haz un `UPDATE` en el servicio después de insertar/modificar/eliminar.
 
-**Frontend:**
+**Frontend (por hacer):**
 
 ```
 Componente estrella-valoracion (reutilizable)
@@ -63,9 +65,11 @@ Componente estrella-valoracion (reutilizable)
   → Se refresca puntuacionMedia
 ```
 
-### Favoritos
+### Favoritos — **Pendiente de implementar**
 
-**Backend:**
+**Modelo existente:** `FavoritoModel` con clave compuesta `(UsuarioId, PeliculaId)`.
+
+**Backend (por hacer):**
 
 ```csharp
 POST   /api/favoritos/{peliculaId}       // añadir a favoritos (requiere auth)
@@ -73,7 +77,7 @@ DELETE /api/favoritos/{peliculaId}       // quitar de favoritos
 GET    /api/favoritos                    // listar favoritos del usuario
 ```
 
-**Frontend:**
+**Frontend (por hacer):**
 
 ```
 Botón corazón en ficha de película
@@ -101,9 +105,9 @@ Componente buscador (shared/)
   → Muestra resultados en el listado
 ```
 
-### Rankings y estadísticas
+### Rankings y estadísticas — **Pendiente de implementar**
 
-**Backend:**
+**Backend (por hacer):**
 
 ```csharp
 GET /api/peliculas/mejor-valoradas   → top 10 por puntuacionMedia
@@ -111,7 +115,7 @@ GET /api/peliculas/mas-recientes     → ordenadas por anioEstreno DESC
 GET /api/estadisticas                → total películas, media global
 ```
 
-**Frontend:**
+**Frontend (por hacer):**
 
 ```
 Página principal con secciones:
@@ -135,9 +139,9 @@ Página principal con secciones:
 ## Errores frecuentes
 
 | Error | Causa | Solución |
-|---|---|---|
+|---|---|---|---|
 | El frontend manda datos que el backend no entiende | DTO desincronizado entre Angular y ASP.NET | Copia exacta de campos y tipos |
-| 401 Unauthorized | El endpoint requiere auth y no envías token | Implementar autenticación primero o dejar endpoints públicos para desarrollo |
+| 401 Unauthorized | El endpoint requiere auth y no envías token | La autenticación JWT está comentada en `Program.cs` — activarla o dejar endpoints públicos |
 | CORS bloquea la petición | El backend no tiene configurado el origen | Ya está configurado para `http://localhost:4200`. Si cambias puerto, actualiza `Program.cs`. |
 | La puntuación media no se actualiza | OLVIDASTE recalcularla en el servicio | Después de cada valoración, recalcula y guarda |
 
