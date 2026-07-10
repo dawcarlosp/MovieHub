@@ -20,25 +20,29 @@ No te saltes pasos ni los reordenes.
 
 ## Paso 1: Modelo (`Models/`)
 
+Los modelos reales del proyecto usan el sufijo `Model` y relaciones con tabla intermedia explícita:
+
 ```csharp
-public class Pelicula
+public class PeliculaModel
 {
     public int Id { get; set; }
     public string Titulo { get; set; } = string.Empty;
-    public string Descripcion { get; set; } = string.Empty;
-    public int Duracion { get; set; }  // minutos
-    public int AnioEstreno { get; set; }
-    public string Director { get; set; } = string.Empty;
-    public string? Imagen { get; set; }
+    public string? Descripcion { get; set; }
+    public string? Director { get; set; }
+    public int Anio { get; set; }              // año de estreno
+    public int Duracion { get; set; }          // minutos
+    public string? PosterUrl { get; set; }     // imagen/póster
     public double PuntuacionMedia { get; set; }
 
-    // Relaciones
-    public ICollection<Genero> Generos { get; set; } = new List<Genero>();
+    // Relaciones (tabla intermedia PeliculaGeneroModel)
+    public ICollection<PeliculaGeneroModel> PeliculaGeneros { get; set; }
+    public ICollection<ValoracionModel> Valoraciones { get; set; }
+    public ICollection<FavoritoModel> Favoritos { get; set; }
 }
 ```
 
-> ⚠️ El `DbSet<Pelicula>` lo añade el integrante de Base de Datos en `MovieHubContext`.
-> Tú solo creas la clase y le dices a Base de Datos que la revise.
+> ⚠️ Los `DbSet<>` ya están en `DbContext` (añadidos por Base de Datos).
+> No modifiques el DbContext directamente sin coordinar con el integrante de BD.
 
 ---
 
@@ -47,6 +51,7 @@ public class Pelicula
 Nunca expongas los modelos EF Core directamente. Usa **records** con Mapster:
 
 ```csharp
+// MovieHubAPI/DTOs/Pelicula/PeliculaDto.cs
 public record PeliculaDto(
     int Id,
     string Titulo,
@@ -60,6 +65,8 @@ public record PeliculaDto(
 );
 ```
 
+Los DTOs existentes se organizan por carpeta de entidad: `Pelicula/`, `Genero/`, `Usuario/`.
+
 ### Mapeo con Mapster (ya instalado)
 
 Para convertir entre entidad y DTO usa Mapster en el servicio:
@@ -69,31 +76,29 @@ using Mapster;
 
 // En el servicio:
 var peliculaDto = pelicula.Adapt<PeliculaDto>();
-var pelicula = dto.Adapt<Pelicula>();
+var genero = dto.Adapt<GeneroModel>();
 ```
 
-Para configuraciones personalizadas, crea un archivo `MappingConfig.cs`:
+Para configuraciones personalizadas, existe `MappingConfig.cs`:
 
 ```csharp
-public static class MappingConfig
-{
-    public static void Configure()
-    {
-        TypeAdapterConfig<Pelicula, PeliculaDto>.NewConfig()
-            .Map(dest => dest.Generos, src => src.Generos.Select(g => g.Nombre).ToList());
-    }
-}
+TypeAdapterConfig<PeliculaModel, PeliculaDto>.NewConfig()
+    .Map(dest => dest.AnioEstreno, src => src.Anio)
+    .Map(dest => dest.Imagen, src => src.PosterUrl)
+    .Map(dest => dest.Generos, src => src.PeliculaGeneros.Select(pg => pg.Genero.Nombre).ToList());
 ```
 
-Y llámalo desde `Program.cs` al arrancar.
+> ⚠️ **Importante:** Actualmente `MappingConfig.Configure()` **no se llama** en `Program.cs`.
+> Si añades un nuevo mapeo personalizado, asegúrate de invocarlo al arrancar la app.
 
 ---
 
 ## Paso 3: Interface (`Interfaces/`)
 
-Define el contrato del servicio:
+Define el contrato del servicio. Todas las interfaces están bajo el namespace `MovieHubAPI.Interfaces`:
 
 ```csharp
+// IPeliculaService.cs
 public interface IPeliculaService
 {
     Task<List<PeliculaDto>> GetAllAsync();
@@ -104,26 +109,26 @@ public interface IPeliculaService
 }
 ```
 
+Interfaces existentes: `IPeliculaService`, `IGeneroService`, `IUsuarioService` (esta última pendiente de implementar).
+
 ---
 
 ## Paso 4: Servicio (`Services/`)
 
-Toda la lógica de negocio va aquí. Los controladores **no** tienen lógica:
+Toda la lógica de negocio va aquí. Los controladores **no** tienen lógica. Los servicios existentes usan `DbContext` (clase real del proyecto) y Mapster:
 
 ```csharp
 public class PeliculaService : IPeliculaService
 {
-    private readonly MovieHubContext _context;
+    private readonly DbContext _context;
 
-    public PeliculaService(MovieHubContext context)
-    {
-        _context = context;
-    }
+    public PeliculaService(DbContext context) => _context = context;
 
     public async Task<List<PeliculaDto>> GetAllAsync()
     {
         var peliculas = await _context.Peliculas
-            .Include(p => p.Generos)
+            .Include(p => p.PeliculaGeneros)
+            .ThenInclude(pg => pg.Genero)
             .ToListAsync();
 
         return peliculas.Adapt<List<PeliculaDto>>();
@@ -132,6 +137,8 @@ public class PeliculaService : IPeliculaService
     // ... resto de métodos
 }
 ```
+
+Servicios existentes: `PeliculaService`, `GeneroService`. `UsuarioService` está pendiente de implementar.
 
 ---
 
@@ -195,10 +202,10 @@ public class PeliculasController : ControllerBase
 
 ## Paso 6: Registrar en `Program.cs`
 
-Descomenta y completa el registro del DbContext:
+El registro del DbContext ya está hecho:
 
 ```csharp
-builder.Services.AddDbContext<MovieHubContext>(options =>
+builder.Services.AddDbContext<DbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MovieHubConnection")));
 ```
 
@@ -207,20 +214,31 @@ Registra tus servicios:
 ```csharp
 builder.Services.AddScoped<IPeliculaService, PeliculaService>();
 builder.Services.AddScoped<IGeneroService, GeneroService>();
-// etc.
+// IUsuarioService pendiente de registrar
 ```
 
-Configura Mapster si tienes MappingConfig:
+> ⚠️ **Aviso:** `MappingConfig.Configure()` actualmente **no se invoca** en `Program.cs`.
+> Si trabajas con Mapster y necesitas mapeos personalizados, añádelo antes de `var app = builder.Build();`.
+
+### Autenticación (futura)
+
+El proyecto incluye los paquetes JWT e Identity, pero la autenticación está **comentada** en `Program.cs`:
 
 ```csharp
-MappingConfig.Configure();
+// builder.Services.AddAuthentication(...)
+// builder.Services.AddAuthorization(...)
+// app.UseAuthentication();
 ```
+
+Cuando se active, descomentar esos bloques y configurar `Jwt:Key`, `Jwt:Issuer` y `Jwt:Audience` en `appsettings.json`.
 
 ---
 
 ## Validación con FluentValidation
 
-Crea validadores para tus DTOs de entrada:
+El paquete `FluentValidation.DependencyInjectionExtensions` está instalado pero **no hay validadores creados aún**.
+
+Cuando los crees, sigue este patrón:
 
 ```csharp
 public class CreatePeliculaValidator : AbstractValidator<CreatePeliculaDto>
@@ -234,7 +252,7 @@ public class CreatePeliculaValidator : AbstractValidator<CreatePeliculaDto>
 }
 ```
 
-Regístralos en `Program.cs`:
+Y regístralos en `Program.cs`:
 
 ```csharp
 builder.Services.AddValidatorsFromAssemblyContaining<CreatePeliculaValidator>();
@@ -245,12 +263,14 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreatePeliculaValidator>();
 ## Errores frecuentes
 
 | Error | Causa | Solución |
-|---|---|---|
+|---|---|---|---|
 | `No service for type X has been registered` | Olvidaste registrar el servicio en Program.cs | Añadir `builder.Services.AddScoped<IX, X>()` |
-| `Object reference not set to an instance of an object` | No hiciste `Include()` de las relaciones | Añadir `.Include(p => p.Generos)` |
-| `A possible object cycle was detected` | Relación circular en JSON | Configurar `ReferenceHandler.IgnoreCycles` en Program.cs o usar DTOs planos |
+| `Object reference not set to an instance of an object` | No hiciste `Include()` + `ThenInclude()` de las relaciones | Añadir `.Include(p => p.PeliculaGeneros).ThenInclude(pg => pg.Genero)` |
+| `A possible object cycle was detected` | Relación circular en JSON | Usar DTOs planos (nunca expongas entidades EF directamente) |
 | Swagger no carga | No está configurado | Verificar `app.UseSwagger()` y `UseSwaggerUI()` en Program.cs |
 | 405 Method Not Allowed | Usaste `[HttpPost]` pero envías GET | Revisar el verbo HTTP en el endpoint |
+| MappingConfig no tiene efecto | `Configure()` no se llama desde `Program.cs` | Añadir `MappingConfig.Configure()` antes de `var app = builder.Build();` |
+| Error de compilación con `DbContext` | Conflicto con `System.Data.Common.DbContext` | Usar el namespace global o alias; nuestro `DbContext` no tiene namespace |
 
 ---
 
