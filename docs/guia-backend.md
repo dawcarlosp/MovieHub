@@ -217,8 +217,8 @@ builder.Services.AddScoped<IGeneroService, GeneroService>();
 // IUsuarioService pendiente de registrar
 ```
 
-> ⚠️ **Aviso:** `MappingConfig.Configure()` actualmente **no se invoca** en `Program.cs`.
-> Si trabajas con Mapster y necesitas mapeos personalizados, añádelo antes de `var app = builder.Build();`.
+> ✅ `MappingConfig.Configure()` ya está activo en `Program.cs`. Los mapeos personalizados
+> (`Anio→AnioEstreno`, `PosterUrl→Imagen`, `PeliculaGeneros→List<string>`) se aplican automáticamente.
 
 ### Autenticación (futura)
 
@@ -269,7 +269,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreatePeliculaValidator>();
 | `A possible object cycle was detected` | Relación circular en JSON | Usar DTOs planos (nunca expongas entidades EF directamente) |
 | Swagger no carga | No está configurado | Verificar `app.UseSwagger()` y `UseSwaggerUI()` en Program.cs |
 | 405 Method Not Allowed | Usaste `[HttpPost]` pero envías GET | Revisar el verbo HTTP en el endpoint |
-| MappingConfig no tiene efecto | `Configure()` no se llama desde `Program.cs` | Añadir `MappingConfig.Configure()` antes de `var app = builder.Build();` |
+| MappingConfig deja de tener efecto | Alguien borró la línea en `Program.cs` | Asegurar que `MappingConfig.Configure()` está antes de `var app = builder.Build();` |
 | Error de compilación con `DbContext` | Conflicto con `System.Data.Common.DbContext` | Usar el namespace global o alias; nuestro `DbContext` no tiene namespace |
 
 ---
