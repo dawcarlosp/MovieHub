@@ -91,7 +91,7 @@ Reglas:
 - Asigna a otro integrante como revisor antes de fusionar.
 - No apruebes tu propio PR.
 - Si el revisor pide cambios, corrígelos en la misma rama (nuevos commits) y vuelve a pedir revisión.
-- Solo se fusiona cuando el PR está aprobado y, cuando exista, la pipeline de GitHub Actions esté en verde.
+- Solo se fusiona cuando el PR está aprobado y, cuando exista pipeline de GitHub Actions, esté en verde.
 
 ## Después del merge: cómo empezar la siguiente iteración
 
@@ -129,7 +129,7 @@ Generan la mayoría de los conflictos si no se coordina. Avisa en el grupo antes
 
 **Backend**
 - `Program.cs` (registro de servicios, middlewares)
-- El `DbContext` y las migraciones — **solo el integrante de Base de datos genera migraciones** (`dotnet ef migrations add ...`). Si necesitas cambiar una entidad, avísale primero.
+- `DbContext.cs` y las migraciones — **solo el integrante de Base de datos genera migraciones** (`dotnet ef migrations add ...`). Si necesitas cambiar una entidad, avísale primero.
 - `*.csproj` (paquetes NuGet)
 
 **Frontend**
