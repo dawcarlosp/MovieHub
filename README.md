@@ -4,7 +4,22 @@ Plataforma web para gestionar un catálogo de películas: exploración, valoraci
 
 ## Estado actual del proyecto
 
-> La pipeline de CI (`.github/workflows/`) ya está creada, pero los tests todavía no están implementados (pendiente del integrante de Calidad). Hasta entonces, cada Pull Request debe probarse manualmente antes de fusionar.
+### Implementado
+- **Backend:** CRUD completo de Películas y Géneros (modelos, DTOs, servicios, controladores)
+- **Base de datos:** Migración inicial con Identity (`UsuarioModel` hereda de `IdentityUser<long>`), tablas `AspNet*`, relaciones N:M con claves compuestas
+- **Mapping:** Configuración de Mapster para DTOs de Películas (`MappingConfig.cs`)
+- **Swagger:** Documentación interactiva disponible en `/swagger`
+- **CORS:** Permitido para `http://localhost:4200`
+
+### Pendiente
+- **Autenticación JWT:** Paquetes instalados pero código comentado en `Program.cs`
+- **Validadores FluentValidation:** Paquete instalado pero sin validadores creados
+- **Tests:** Proyecto de tests no creado
+- **Pipeline CI:** `.github/workflows/` vacío
+- **Frontend:** Proyecto Angular scaffolded pero sin componentes de negocio
+- **Funcionalidades extra:** Valoraciones, Favoritos, Estadísticas, Búsqueda/Filtros — pendientes de implementar
+
+> Hasta que la pipeline y los tests estén operativos, cada Pull Request debe probarse manualmente antes de fusionar.
 
 ## Descripción
 
@@ -18,18 +33,23 @@ MovieHub permite:
 
 ## Tecnologías
 
-- **Frontend:** Angular, Angular Material
-- **Backend:** ASP.NET Core Web API, Entity Framework Core
-- **Base de datos:** SQL Server
-- **CI/CD:** Git, GitHub, GitHub Actions
+- **Frontend:** Angular 22 (standalone), SCSS, Vitest
+- **Backend:** ASP.NET Core Web API (.NET 10), Entity Framework Core 10, Mapster, FluentValidation
+- **Base de datos:** SQL Server, Identity (ASP.NET Core Identity)
+- **Autenticación:** JWT (pendiente de activar)
+- **Documentación API:** Swagger / Swashbuckle
+- **CI/CD:** Git, GitHub, GitHub Actions (pendiente de configurar)
 
 ## Estructura del repositorio
 
 ```
 MovieHub/
-├── MovieHubAPI/        # Backend - ASP.NET Core Web API
-├── MovieHubAngular/    # Frontend - Angular
-└── README.md
+├── MovieHubAPI/          # Backend - ASP.NET Core Web API
+├── MovieHubAngular/      # Frontend - Angular
+├── docs/                 # Guías por rol
+├── .github/workflows/    # CI/CD (pendiente)
+├── README.md
+└── CONTRIBUTING.md
 ```
 
 ## Equipo y reparto de trabajo
@@ -128,7 +148,7 @@ cd MovieHub
 cd MovieHubAPI
 ```
 
-Asegúrate de tener SQL Server disponible y aplica las migraciones:
+Asegúrate de tener SQL Server disponible. Las migraciones ya están aplicadas; si necesitas regenerarlas:
 
 ```bash
 dotnet ef database update
@@ -140,9 +160,9 @@ Ejecutar la API:
 dotnet run
 ```
 
-Disponible en `https://localhost:xxxx` (puerto definido en `launchSettings.json`).
+Disponible en `https://localhost:7154`.
 
-- 🌐 **Documentación de la API (Swagger Classic):** [https://localhost:XXXX/swagger](https://localhost:XXXX/swagger) *(Recuerda cambiar `XXXX` por tu puerto HTTPS local)*
+- 🌐 **Documentación de la API (Swagger):** [https://localhost:7154/swagger](https://localhost:7154/swagger)
 
 ### 3. Frontend (MovieHubAngular)
 
@@ -156,12 +176,11 @@ Disponible en `http://localhost:4200`.
 
 ## Tests
 
-```bash
-cd MovieHubAPI
-dotnet test
-```
+*(Pendiente de implementación — ver "Estado actual del proyecto".)*
 
-Cubrirán: CRUD de películas, validaciones, consultas, favoritos y valoraciones. *(Pendiente de implementación — ver "Estado actual".)*
+El proyecto de tests está por crear. Se usarán:
+- **Backend:** xUnit + Moq
+- **Frontend:** Vitest (integrados en Angular CLI)
 
 ## Flujo de trabajo con Git
 
