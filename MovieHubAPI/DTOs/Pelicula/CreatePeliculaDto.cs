@@ -1,4 +1,4 @@
-namespace MovieHubAPI.DTOs;
+namespace MovieHubAPI.DTOs.Pelicula;
 
 public record CreatePeliculaDto(
     string Titulo,
