@@ -79,6 +79,9 @@ builder.Services.AddOpenApi();
 MappingConfig.Configure();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.UseCors("AllowAngularApp");
 
 // Configure the HTTP request pipeline.
