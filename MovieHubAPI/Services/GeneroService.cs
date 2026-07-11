@@ -6,9 +6,9 @@ namespace MovieHubAPI.Services
 {
     public class GeneroService : IGeneroService
     {
-        private readonly DbContext _context;
+        private readonly MovieHubDbContext _context;
 
-        public GeneroService(DbContext context) => _context = context;
+        public GeneroService(MovieHubDbContext context) => _context = context;
 
         public async Task<List<GeneroDto>> GetAllAsync()
         {

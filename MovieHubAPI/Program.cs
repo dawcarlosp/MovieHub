@@ -33,7 +33,7 @@ builder.Services.AddScoped<IGeneroService, GeneroService>();
 //Inyectar el contexto de la base de datos
 
 
-builder.Services.AddDbContext<DbContext>(
+builder.Services.AddDbContext<MovieHubDbContext>(
     Options =>
         Options.UseSqlServer(
             builder.Configuration

@@ -7,9 +7,9 @@ namespace MovieHubAPI.Services
 {
     public class PeliculaService : IPeliculaService
     {
-        private readonly DbContext _context;
+        private readonly MovieHubDbContext _context;
 
-        public PeliculaService(DbContext context) => _context = context;
+        public PeliculaService(MovieHubDbContext context) => _context = context;
 
         public async Task<List<PeliculaDto>> GetAllAsync()
         {

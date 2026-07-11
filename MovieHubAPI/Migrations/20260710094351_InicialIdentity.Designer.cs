@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MovieHubAPI.Migrations
 {
-    [DbContext(typeof(DbContext))]
+    [DbContext(typeof(MovieHubDbContext))]
     [Migration("20260710094351_InicialIdentity")]
     partial class InicialIdentity
     {

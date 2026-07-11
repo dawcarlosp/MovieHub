@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MovieHubAPI.Migrations
 {
-    [DbContext(typeof(DbContext))]
+    [DbContext(typeof(MovieHubDbContext))]
     partial class DbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

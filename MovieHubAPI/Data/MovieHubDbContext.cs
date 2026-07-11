@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-public class DbContext : IdentityDbContext<UsuarioModel, IdentityRole<long>, long>
+public class MovieHubDbContext : IdentityDbContext<UsuarioModel, IdentityRole<long>, long>
 {
-    public DbContext(DbContextOptions<DbContext> options)
+    public MovieHubDbContext(DbContextOptions<MovieHubDbContext> options)
         : base(options) { }
 
     public DbSet<PeliculaModel> Peliculas { get; set; }
