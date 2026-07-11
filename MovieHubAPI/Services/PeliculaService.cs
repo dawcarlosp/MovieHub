@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
+using MovieHubAPI.DTOs;
 using MovieHubAPI.DTOs.Pelicula;
 using MovieHubAPI.Interfaces;
 
@@ -11,12 +12,26 @@ namespace MovieHubAPI.Services
 
         public PeliculaService(MovieHubDbContext context) => _context = context;
 
-        public async Task<List<PeliculaDto>> GetAllAsync()
+        public async Task<PaginadosDto<PeliculaDto>> GetAllPaginadoAsync(int page, int pageSize)
         {
-            var peliculas = await _context.Peliculas
+            var query = _context.Peliculas
                 .Include(p => p.PeliculaGeneros).ThenInclude(pg => pg.Genero)
+                .AsQueryable();
+
+            var totalCount = await query.CountAsync();
+
+            var peliculas = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
-            return peliculas.Adapt<List<PeliculaDto>>();
+
+            return new PaginadosDto<PeliculaDto>(
+                peliculas.Adapt<List<PeliculaDto>>(),
+                page,
+                pageSize,
+                totalCount,
+                (int)Math.Ceiling(totalCount / (double)pageSize)
+            );
         }
 
         public async Task<PeliculaDto?> GetByIdAsync(int id)
