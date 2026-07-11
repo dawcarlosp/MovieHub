@@ -1,7 +1,9 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using MovieHubAPI.Configurations;
+using MovieHubAPI.Filters;
 using MovieHubAPI.Interfaces;
 using MovieHubAPI.Services;
-using MovieHubAPI.Configurations;
 // using Microsoft.AspNetCore.Authentication.JwtBearer;
 // using Microsoft.IdentityModel.Tokens;
 // using System.Text;
@@ -21,7 +23,10 @@ builder.Services.AddCors(options =>
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationFilter>();
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -29,6 +34,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IPeliculaService, PeliculaService>();
 builder.Services.AddScoped<IGeneroService, GeneroService>();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 //Inyectar el contexto de la base de datos
 
