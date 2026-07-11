@@ -10,6 +10,7 @@ Plataforma web para gestionar un catálogo de películas: exploración, valoraci
 - **Mapping:** Configuración de Mapster para DTOs de Películas (`MappingConfig.cs`)
 - **Validación:** FluentValidation con filtro global (`ValidationFilter`) y validadores para Películas y Géneros
 - **Middleware:** Manejo global de excepciones con `ExceptionHandlingMiddleware` (errores inesperados devuelven JSON ProblemDetails)
+- **Paginación:** Endpoint `GET /api/peliculas` con `?page=&pageSize=` y DTO genérico `PaginadosDto<T>`
 - **Swagger:** Documentación interactiva disponible en `/swagger`
 - **CORS:** Permitido para `http://localhost:4200`
 
