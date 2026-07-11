@@ -5,7 +5,6 @@ using MovieHubAPI.DTOs.Pelicula;
 
 namespace MovieHubAPI.ApiDefinitions;
 
-[EndpointGroupName("Películas")]
 public interface IPeliculaApi
 {
     [HttpGet]

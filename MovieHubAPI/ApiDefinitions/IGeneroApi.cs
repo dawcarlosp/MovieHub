@@ -4,7 +4,6 @@ using MovieHubAPI.DTOs.Genero;
 
 namespace MovieHubAPI.ApiDefinitions;
 
-[EndpointGroupName("Géneros")]
 public interface IGeneroApi
 {
     [HttpGet]
