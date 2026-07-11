@@ -3,14 +3,24 @@ using Microsoft.EntityFrameworkCore;
 using MovieHubAPI.Configurations;
 using MovieHubAPI.Filters;
 using MovieHubAPI.Interfaces;
-using MovieHubAPI.Services;
 using MovieHubAPI.Middleware;
+using MovieHubAPI.Services;
+using Swashbuckle.AspNetCore.SwaggerGen;
 // using Microsoft.AspNetCore.Authentication.JwtBearer;
 // using Microsoft.IdentityModel.Tokens;
 // using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSwaggerGen(c =>
+{
+    // Fuerza a Swagger a mapear correctamente las acciones de los controladores
+    // basándose en las interfaces si estas contienen metadatos.
+    c.CustomOperationIds(apiDesc =>
+    {
+        return apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null;
+    });
+});
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
@@ -29,7 +39,7 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<ValidationFilter>();
 });
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
 
 //Negocio
 

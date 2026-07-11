@@ -3,12 +3,13 @@ using MovieHubAPI.ApiDefinitions;
 using MovieHubAPI.DTOs;
 using MovieHubAPI.DTOs.Pelicula;
 using MovieHubAPI.Interfaces;
+using System.ComponentModel;
 
 namespace MovieHubAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [EndpointGroupName("Películas")]
+    [Tags("Películas")]
     public class PeliculasController : ControllerBase, IPeliculaApi
     {
         private readonly IPeliculaService _peliculaService;
@@ -18,29 +19,44 @@ namespace MovieHubAPI.Controllers
             _peliculaService = peliculaService;
         }
 
+        [HttpGet]
+        [EndpointSummary("Listar películas paginadas")]
+        [EndpointDescription("Devuelve una página de películas con información detallada.")]
+        [ProducesResponseType<PaginadosDto<PeliculaDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<PaginadosDto<PeliculaDto>>> GetAll(
-            [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 10)
+              [Description("Número de página (empieza en 1)")][FromQuery] int page = 1,
+        [Description("Elementos por página (máx 50)")][FromQuery] int pageSize = 10)
         {
             if (pageSize > 50) pageSize = 50;
             if (page < 1) page = 1;
             var resultado = await _peliculaService.GetAllPaginadoAsync(page, pageSize);
             return Ok(resultado);
         }
-
+        [HttpGet("{id}")]
+        [EndpointSummary("Obtener película por ID")]
+        [ProducesResponseType<PeliculaDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PeliculaDto>> GetById(int id)
         {
             var pelicula = await _peliculaService.GetByIdAsync(id);
             if (pelicula is null) return NotFound();
             return Ok(pelicula);
         }
-
+        [HttpPost]
+        [EndpointSummary("Crear nueva película")]
+        [ProducesResponseType<PeliculaDto>(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<PeliculaDto>> Create(CreatePeliculaDto dto)
         {
             var pelicula = await _peliculaService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = pelicula.Id }, pelicula);
         }
 
+        [HttpPut("{id}")]
+        [EndpointSummary("Actualizar película existente")]
+        [ProducesResponseType<PeliculaDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PeliculaDto>> Update(int id, UpdatePeliculaDto dto)
         {
             var pelicula = await _peliculaService.UpdateAsync(id, dto);
@@ -48,6 +64,10 @@ namespace MovieHubAPI.Controllers
             return Ok(pelicula);
         }
 
+        [HttpDelete("{id}")]
+        [EndpointSummary("Eliminar película")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
             var deleted = await _peliculaService.DeleteAsync(id);
