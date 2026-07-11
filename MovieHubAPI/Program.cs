@@ -4,6 +4,7 @@ using MovieHubAPI.Configurations;
 using MovieHubAPI.Filters;
 using MovieHubAPI.Interfaces;
 using MovieHubAPI.Services;
+using MovieHubAPI.Middleware;
 // using Microsoft.AspNetCore.Authentication.JwtBearer;
 // using Microsoft.IdentityModel.Tokens;
 // using System.Text;
@@ -79,6 +80,9 @@ builder.Services.AddOpenApi();
 MappingConfig.Configure();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.UseCors("AllowAngularApp");
 
 // Configure the HTTP request pipeline.
