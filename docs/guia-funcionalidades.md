@@ -91,10 +91,12 @@ Botón corazón en ficha de película
 **Backend:**
 
 ```csharp
-GET /api/peliculas?titulo=batman&generoId=3&orden=puntuacion
+GET /api/peliculas?titulo=batman&generoId=3&orden=puntuacion&page=1&pageSize=10
 ```
 
 Un solo endpoint con parámetros opcionales. El servicio aplica los filtros en memoria con LINQ.
+
+> Este endpoint incluye paginación integrada. Consulta `docs/guia-backend.md` para más detalles sobre el formato de respuesta paginado.
 
 **Frontend:**
 
