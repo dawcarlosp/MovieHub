@@ -9,6 +9,7 @@ Plataforma web para gestionar un catálogo de películas: exploración, valoraci
 - **Base de datos:** Migración inicial con Identity (`UsuarioModel` hereda de `IdentityUser<long>`), tablas `AspNet*`, relaciones N:M con claves compuestas, seed data de 245 películas y 30 géneros
 - **Mapping:** Configuración de Mapster para DTOs de Películas (`MappingConfig.cs`)
 - **Validación:** FluentValidation con filtro global (`ValidationFilter`) y validadores para Películas y Géneros
+- **Middleware:** Manejo global de excepciones con `ExceptionHandlingMiddleware` (errores inesperados devuelven JSON ProblemDetails)
 - **Swagger:** Documentación interactiva disponible en `/swagger`
 - **CORS:** Permitido para `http://localhost:4200`
 
