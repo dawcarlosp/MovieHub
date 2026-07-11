@@ -8,12 +8,12 @@ Plataforma web para gestionar un catálogo de películas: exploración, valoraci
 - **Backend:** CRUD completo de Películas y Géneros (modelos, DTOs, servicios, controladores)
 - **Base de datos:** Migración inicial con Identity (`UsuarioModel` hereda de `IdentityUser<long>`), tablas `AspNet*`, relaciones N:M con claves compuestas, seed data de 245 películas y 30 géneros
 - **Mapping:** Configuración de Mapster para DTOs de Películas (`MappingConfig.cs`)
+- **Validación:** FluentValidation con filtro global (`ValidationFilter`) y validadores para Películas y Géneros
 - **Swagger:** Documentación interactiva disponible en `/swagger`
 - **CORS:** Permitido para `http://localhost:4200`
 
 ### Pendiente
 - **Autenticación JWT:** Paquetes instalados pero código comentado en `Program.cs`
-- **Validadores FluentValidation:** Paquete instalado pero sin validadores creados
 - **Tests:** Proyecto de tests no creado
 - **Pipeline CI:** `.github/workflows/` vacío
 - **Frontend:** Proyecto Angular scaffolded pero sin componentes de negocio

@@ -235,9 +235,23 @@ Cuando se active, descomentar esos bloques y configurar `Jwt:Key`, `Jwt:Issuer` 
 
 ## Validación con FluentValidation
 
-El paquete `FluentValidation.DependencyInjectionExtensions` está instalado pero **no hay validadores creados aún**.
+### Implementación actual
 
-Cuando los crees, sigue este patrón:
+Los validadores se registran automáticamente via `AddValidatorsFromAssemblyContaining<Program>()` en `Program.cs` y se ejecutan mediante un filtro global `ValidationFilter` que:
+
+1. Resuelve el `IValidator<T>` correspondiente al DTO recibido
+2. Si falla la validación, devuelve `400 Bad Request` con errores agrupados por campo en formato `ValidationProblemDetails`
+
+### Validadores existentes
+
+| Validador | DTO | Reglas |
+|-----------|-----|--------|
+| `Validators/Pelicula/CreatePeliculaValidator.cs` | `CreatePeliculaDto` | Titulo (NotEmpty, max 200), Director (NotEmpty, max 150), Duracion (>0), AnioEstreno (1888-2030), Imagen (max 500), GeneroIds (NotEmpty, IDs >0) |
+| `Validators/Pelicula/UpdatePeliculaValidator.cs` | `UpdatePeliculaDto` | Mismas reglas que Create |
+| `Validators/Genero/CreateGeneroValidator.cs` | `CreateGeneroDto` | Nombre (NotEmpty, max 50) |
+| `Validators/Genero/UpdateGeneroValidator.cs` | `UpdateGeneroDto` | Mismas reglas que Create |
+
+### Cómo añadir un validador nuevo
 
 ```csharp
 public class CreatePeliculaValidator : AbstractValidator<CreatePeliculaDto>
@@ -251,11 +265,7 @@ public class CreatePeliculaValidator : AbstractValidator<CreatePeliculaDto>
 }
 ```
 
-Y regístralos en `Program.cs`:
-
-```csharp
-builder.Services.AddValidatorsFromAssemblyContaining<CreatePeliculaValidator>();
-```
+No hace falta registrarlo manualmente — `AddValidatorsFromAssemblyContaining<Program>()` lo descubre automáticamente y el `ValidationFilter` lo ejecuta en cada request.
 
 ---
 
