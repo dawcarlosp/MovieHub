@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MovieHubAPI.DTOs;
 using MovieHubAPI.DTOs.Pelicula;
 using MovieHubAPI.Interfaces;
 
@@ -16,10 +17,14 @@ namespace MovieHubAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<PeliculaDto>>> GetAll()
+        public async Task<ActionResult<PaginadosDto<PeliculaDto>>> GetAll(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10)
         {
-            var peliculas = await _peliculaService.GetAllAsync();
-            return Ok(peliculas);
+            if (pageSize > 50) pageSize = 50;
+            if (page < 1) page = 1;
+            var resultado = await _peliculaService.GetAllPaginadoAsync(page, pageSize);
+            return Ok(resultado);
         }
 
         [HttpGet("{id}")]
