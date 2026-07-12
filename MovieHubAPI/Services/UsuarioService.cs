@@ -29,7 +29,9 @@ namespace MovieHubAPI.Services
             };
 
             var result = await _userManager.CreateAsync(usuario, dto.Password);
-            if (!result.Succeeded) return null;
+            if (!result.Succeeded)
+                throw new ArgumentException(
+                    string.Join("; ", result.Errors.Select(e => e.Description)));
 
             return await GenerateAuthResponseAsync(usuario);
         }
