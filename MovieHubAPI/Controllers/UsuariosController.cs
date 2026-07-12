@@ -22,9 +22,15 @@ namespace MovieHubAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<AuthResponseDto>> Register(RegisterDto dto)
         {
-            var result = await _usuarioService.RegisterAsync(dto);
-
-            return CreatedAtAction(nameof(GetProfile), new { userId = result.UserId }, result);
+            try
+            {
+                var result = await _usuarioService.RegisterAsync(dto);
+                return CreatedAtAction(nameof(GetProfile), new { userId = result.UserId }, result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPost("login")]
