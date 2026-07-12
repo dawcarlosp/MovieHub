@@ -340,6 +340,11 @@ Middleware global que captura cualquier excepción no controlada en el pipeline 
 | MappingConfig deja de tener efecto | Alguien borró la línea en `Program.cs` | Asegurar que `MappingConfig.Configure()` está antes de `var app = builder.Build();` |
 | Error de compilación con `DbContext` | Conflicto con `System.Data.Common.DbContext` | Usar el namespace global o alias; nuestro `DbContext` no tiene namespace |
 | El endpoint lanza excepción pero devuelve 500 genérico | El middleware captura errores no controlados | Revisar el log del backend para ver el detalle real |
+| `POST /register` devuelve 400 con `"Passwords must have at least one uppercase"` | La contraseña no cumple las políticas de Identity | Usar al menos 6 caracteres, 1 mayúscula, 1 minúscula y 1 dígito |
+| `POST /register` devuelve 400 con `"Username 'X' is already taken"` | El nombre de usuario ya existe en la BD | Elegir otro nombre de usuario |
+| `POST /login` devuelve 401 | Credenciales inválidas o el usuario no existe | Verificar email y contraseña |
+| Swagger muestra el botón Authorize pero el token no funciona | La autenticación JWT está comentada en Program.cs | El botón Authorize es solo UI; la validación real se activará cuando el equipo descomente `AddAuthentication` |
+| `ArgumentException` con mensaje de Identity en la respuesta | El servicio lanza `ArgumentException` con los errores de Identity | El `ExceptionHandlingMiddleware` lo captura y devuelve 400. En producción el mensaje es genérico. |
 
 ---
 
