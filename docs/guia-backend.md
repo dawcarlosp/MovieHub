@@ -43,6 +43,8 @@ public class PeliculaModel
 
 > ⚠️ Los `DbSet<>` ya están en `DbContext` (añadidos por Base de Datos).
 > No modifiques el DbContext directamente sin coordinar con el integrante de BD.
+>
+> **Director:** El campo `Director` es un `string` no normalizado (no hay tabla `DirectorModel`). Se descartó crearla porque el proyecto no requiere CRUD ni búsqueda independiente de directores. Límite: `[MaxLength(500)]` en el modelo.
 
 ---
 
@@ -268,7 +270,7 @@ Los validadores se registran automáticamente via `AddValidatorsFromAssemblyCont
 
 | Validador | DTO | Reglas |
 |-----------|-----|--------|
-| `Validators/Pelicula/CreatePeliculaValidator.cs` | `CreatePeliculaDto` | Titulo (NotEmpty, max 200), Director (NotEmpty, max 150), Duracion (>0), AnioEstreno (1888-2030), Imagen (max 500), GeneroIds (NotEmpty, IDs >0) |
+| `Validators/Pelicula/CreatePeliculaValidator.cs` | `CreatePeliculaDto` | Titulo (NotEmpty, max 200), Director (NotEmpty, max 500), Duracion (>0), AnioEstreno (1888-2030), Imagen (max 500), GeneroIds (NotEmpty, IDs >0) |
 | `Validators/Pelicula/UpdatePeliculaValidator.cs` | `UpdatePeliculaDto` | Mismas reglas que Create |
 | `Validators/Genero/CreateGeneroValidator.cs` | `CreateGeneroDto` | Nombre (NotEmpty, max 50) |
 | `Validators/Genero/UpdateGeneroValidator.cs` | `UpdateGeneroDto` | Mismas reglas que Create |

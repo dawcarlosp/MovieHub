@@ -89,7 +89,7 @@ git push origin feature/database
 
 ## Relaciones del modelo actual
 
-El DbContext (`DbContext.cs`) configura las relaciones explícitamente en `OnModelCreating`:
+El DbContext (`MovieHubDbContext.cs`) configura las relaciones explícitamente en `OnModelCreating`:
 
 | Relación | Tipo | Implementación real |
 |---|---|---|
@@ -107,6 +107,48 @@ El DbContext (`DbContext.cs`) configura las relaciones explícitamente en `OnMod
 
 > La herencia de `IdentityUser<long>` hace que `UsuarioModel` tenga el Id como `long`.
 > El DbContext hereda de `IdentityDbContext<UsuarioModel, IdentityRole<long>, long>`.
+>
+> **Director:** No se normaliza en tabla separada por falta de tiempo y porque el proyecto no requiere gestión independiente de directores (CRUD, búsqueda, etc.). Se mantiene como `string` en `PeliculaModel` con `[MaxLength(500)]`.
+
+---
+
+## Primera migración desde cero
+
+La carpeta `Migrations/` se eliminó del repositorio para partir de un estado limpio. La primera migración debe generarla el integrante de Base de Datos:
+
+### Paso a paso
+
+1. `git checkout main && git pull`
+2. **Eliminar la BD local** (SSMS o Package Manager Console):
+   ```
+   DROP DATABASE MovieHubDB;
+   ```
+3. En la Package Manager Console (proyecto: `MovieHubAPI`):
+   ```
+   Add-Migration InitialCreate
+   ```
+4. Revisar el archivo generado en `Migrations/`:
+   - Buscar `InsertData` → deben aparecer ~1105 filas (245 películas, 30 géneros, ~830 relaciones)
+   - Buscar `DropColumn` o `DropTable` → **NO debe aparecer**. Si aparece, avisar.
+5. Aplicar:
+   ```
+   Update-Database
+   ```
+6. Verificar:
+   ```sql
+   SELECT COUNT(*) FROM Peliculas;       → 245
+   SELECT COUNT(*) FROM Generos;         → 30
+   SELECT COUNT(*) FROM PeliculaGeneros; → ~830
+   ```
+
+### Posibles errores
+
+| Error | Causa | Solución |
+|-------|-------|----------|
+| `Update-Database` falla porque la BD ya existe | No se eliminó antes | Ejecutar `DROP DATABASE MovieHubDB;` y repetir |
+| `InsertData` con menos filas | Archivos incompletos | Avisar al equipo |
+| Migración contiene `DropColumn` | Migración anterior interfiere | Borrar BD y regenerar |
+| Cualquier otro error | — | **Avisar antes de intentar arreglarlo solo** |
 
 ---
 
@@ -114,23 +156,17 @@ El DbContext (`DbContext.cs`) configura las relaciones explícitamente en `OnMod
 
 ### Error: conflicto en el snapshot al hacer `git merge main`
 
-**Por qué pasa:** Otro compañero tocó una entidad y su rama se fusionó en `main`. El archivo `DbContextModelSnapshot.cs` entra en conflicto.
+**Contexto actual:** Desde que se eliminó `Migrations/` del repo, este error **ya no debería ocurrir**. Si en el futuro alguien modifica una entidad y genera una migración en otra rama, el conflicto podría reaparecer.
 
-**Solución:**
+**Solución si ocurre:**
 
 1. Resuelve el conflicto en `DbContextModelSnapshot.cs` manualmente (elige los cambios de ambas partes si son compatibles)
-2. Una vez resuelto y commiteado el merge, verifica que el snapshot refleja el estado real del modelo *(Package Manager Console)*:
-
+2. Verifica que el snapshot refleja el estado real del modelo:
    ```
-   HasPendingModelChanges
+   Add-Migration CheckMigration
    ```
-
-3. Si dice que hay cambios pendientes, regenera la migración *(Package Manager Console)*:
-
-   ```
-   Remove-Migration
-   Add-Migration MiMigracion
-   ```
+   Si genera algo vacío, bórrala con `Remove-Migration`.
+3. Si hay cambios pendientes reales, mantenlos y commitea.
 
 ### Error: "No executable found matching command dotnet-ef" *(Terminal normal)*
 
@@ -157,7 +193,6 @@ dotnet tool install --global dotnet-ef
 | `Update-Database NombreMigracion` | Package Manager Console | Revertir hasta una migración concreta |
 | `Get-Migration` | Package Manager Console | Ver historial de migraciones |
 | `Script-Migration` | Package Manager Console | Generar script SQL (para producción) |
-| `HasPendingModelChanges` | Package Manager Console | Verificar si faltan migraciones |
 
 ---
 
