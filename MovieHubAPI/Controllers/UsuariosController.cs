@@ -25,7 +25,7 @@ namespace MovieHubAPI.Controllers
             try
             {
                 var result = await _usuarioService.RegisterAsync(dto);
-                return CreatedAtAction(nameof(GetProfile), new { userId = result.UserId }, result);
+                return CreatedAtAction(nameof(GetMe), new { userId = result.UserId }, result);
             }
             catch (ArgumentException ex)
             {
@@ -46,24 +46,35 @@ namespace MovieHubAPI.Controllers
             return Ok(result);
         }
 
-        [HttpGet("profile/{userId}")]
-        [EndpointSummary("Obtener perfil de usuario")]
+        [HttpGet("me")]
+        [EndpointSummary("Obtener perfil del usuario")]
         [ProducesResponseType<UserProfileDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UserProfileDto>> GetProfile(long userId)
+        public async Task<ActionResult<UserProfileDto>> GetMe([FromQuery] long userId)
         {
             var result = await _usuarioService.GetProfileAsync(userId);
             if (result is null) return NotFound();
             return Ok(result);
         }
 
-        [HttpPut("profile/{userId}")]
-        [EndpointSummary("Actualizar perfil de usuario")]
+        [HttpPut("me")]
+        [EndpointSummary("Actualizar perfil del usuario")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateProfile(long userId, UpdateProfileDto dto)
+        public async Task<IActionResult> UpdateMe([FromQuery] long userId, UpdateProfileDto dto)
         {
             var result = await _usuarioService.UpdateProfileAsync(userId, dto);
+            if (!result) return NotFound();
+            return NoContent();
+        }
+
+        [HttpDelete("me")]
+        [EndpointSummary("Eliminar cuenta del usuario")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteMe([FromQuery] long userId)
+        {
+            var result = await _usuarioService.DeleteProfileAsync(userId);
             if (!result) return NotFound();
             return NoContent();
         }
