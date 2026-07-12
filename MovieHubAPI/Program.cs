@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MovieHubAPI.Configurations;
 using MovieHubAPI.Filters;
@@ -58,7 +59,17 @@ builder.Services.AddDbContext<MovieHubDbContext>(
                     "MovieHubConnection")));
 
 
-//Inyectar los servicios de la capa de negocio
+//Identity
+builder.Services.AddIdentityCore<UsuarioModel>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+})
+.AddRoles<IdentityRole<long>>()
+.AddEntityFrameworkStores<MovieHubDbContext>();
 
 
 // --- JWT Authentication (pendiente de activar) ---
