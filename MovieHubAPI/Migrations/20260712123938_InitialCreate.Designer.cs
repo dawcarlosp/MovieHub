@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MovieHubAPI.Migrations
 {
     [DbContext(typeof(MovieHubDbContext))]
-    [Migration("20260712121201_InitialCreate")]
+    [Migration("20260712123938_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -4459,6 +4459,7 @@ namespace MovieHubAPI.Migrations
                         {
                             Id = 19,
                             Anio = 1957,
+                            Descripcion = "Doce miembros de un jurado deben decidir el destino de un joven acusado de asesinato mientras enfrentan sus propios prejuicios y dudas.",
                             Director = "Reginald Rose",
                             Duracion = 96,
                             PosterUrl = "https://via.placeholder.com/300x450?text=12+Angry+Men",
@@ -4491,6 +4492,7 @@ namespace MovieHubAPI.Migrations
                         {
                             Id = 22,
                             Anio = 1995,
+                            Descripcion = "Dos detectives investigan una serie de asesinatos inspirados en los siete pecados capitales, enfrentándose a un asesino tan meticuloso como perturbador.",
                             Director = "David Fincher",
                             Duracion = 127,
                             PosterUrl = "https://via.placeholder.com/300x450?text=Seven",
@@ -4501,6 +4503,7 @@ namespace MovieHubAPI.Migrations
                         {
                             Id = 23,
                             Anio = 1991,
+                            Descripcion = "Una joven agente del FBI busca la ayuda de un brillante y peligroso asesino encarcelado para capturar a un despiadado criminal que sigue en libertad.",
                             Director = "Jonathan Demme",
                             Duracion = 118,
                             PosterUrl = "https://via.placeholder.com/300x450?text=Silence+Lambs",
@@ -4752,10 +4755,10 @@ namespace MovieHubAPI.Migrations
                         new
                         {
                             Id = 46,
-                            Anio = 0,
+                            Anio = 2008,
                             Descripcion = "Iron Man, antes también conocido como El Hombre de Hierro en español, es un superhéroe que aparece en los cómics estadounidenses publicados por Marvel Comics. El personaje fue creado por el escritor y editor Stan Lee en colaboración con el guionista Larry Lieber. Los artistas Don Heck y Jack Kirby fueron los encargados de su diseño. Este superhéroe hizo su primera aparición en Tales of Suspense #39 (marzo de 1963) y recibió su propio título en Iron Man #1, en mayo de 1968.",
                             Director = "Jon Favreau",
-                            Duracion = 0,
+                            Duracion = 126,
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/0/02/Iron_Man_%282008_film%29_poster.jpg",
                             PuntuacionMedia = 3.1m,
                             Titulo = "Iron Man"
@@ -4763,10 +4766,10 @@ namespace MovieHubAPI.Migrations
                         new
                         {
                             Id = 47,
-                            Anio = 0,
+                            Anio = 2008,
                             Descripcion = "The Incredible Hulk is a 2008 American superhero film based on the Marvel Comics character the Hulk. Produced by Marvel Studios and Valhalla Motion Pictures, and distributed by Universal Pictures, it is the second film in the Marvel Cinematic Universe (MCU). It was directed by Louis Leterrier from a screenplay by Zak Penn, and stars Edward Norton as Bruce Banner alongside Liv Tyler, Tim Roth, William Hurt, Tim Blake Nelson, Ty Burrell, and Christina Cabot. In the film, Banner becomes the monstrous Hulk as an unwitting pawn in a military scheme to reinvigorate the \"super soldier\" program through gamma radiation. He goes on the run from the military while attempting to cure himself of the Hulk. After the mixed reception to Universal's 2003 film Hulk, Marvel Studios reacquired the rights to the character, though Universal retained distribution rights. Leterrier was hired to direct, and Penn wrote a script that was closer to the comics and the 1978–1982 television series. In April 2007, Norton was hired to portray Banner and to rewrite Penn's screenplay. His script positioned the film as a reboot of the series, distancing it from the 2003 film to give the new version its own identity. Norton was ultimately not credited for his writing. Filming took place from July to November 2007, primarily in Toronto, with additional filming in New York City and Rio de Janeiro. Over 700 visual effects shots were created in post-production using a combination of motion capture and computer-generated imagery. Norton and Marvel Studios had various disagreements during production, including over the final edit. The Incredible Hulk premiered at the Gibson Amphitheatre in Universal City, California, on June 8, 2008, and was released in the United States on June 13 as part of Phase One of the MCU. It was deemed a moderate success, grossing $265 million and receiving slightly better reviews than the 2003 film. A sequel was discussed but never materialized, in part due to rights issues with Universal. Mark Ruffalo took over the role of Banner for subsequent MCU appearances starting with the crossover film The Avengers in 2012.",
                             Director = "Louis Leterrier",
-                            Duracion = 0,
+                            Duracion = 112,
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/f/f0/The_Incredible_Hulk_%28film%29_poster.jpg",
                             PuntuacionMedia = 2.8m,
                             Titulo = "El Increíble Hulk"
@@ -4785,10 +4788,10 @@ namespace MovieHubAPI.Migrations
                         new
                         {
                             Id = 49,
-                            Anio = 0,
+                            Anio = 2011,
                             Descripcion = "Thor (del nórdico antiguo Þórr, pronunciado /θoːrː/ en islandés antiguo y /θo͡u̯r̥/ en islandés moderno) es el dios del trueno y fuerza en la mitología nórdica y germánica. Su papel es bastante complejo, ya que tenía influencia en áreas muy diferentes, tales como el clima, las cosechas, la protección, la consagración, la justicia, las lidias, los viajes y las batallas. Una vez que el proceso de cristianización fue completado, la figura de Thor fue demonizada por la creciente influencia de misioneros cristianos. Después de que el cristianismo se cimentara, restos de su fe se conservaron de forma clandestina principalmente en áreas rurales, sobreviviendo así hasta tiempos modernos en el folclore germano y más recientemente reconstruido bajo diversas formas en el neopaganismo germánico.",
                             Director = "Kenneth Branagh",
-                            Duracion = 0,
+                            Duracion = 115,
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/9/95/Thor_%28film%29_poster.jpg",
                             PuntuacionMedia = 4.1m,
                             Titulo = "Thor"
@@ -5622,6 +5625,7 @@ namespace MovieHubAPI.Migrations
                         {
                             Id = 125,
                             Anio = 1955,
+                            Descripcion = "Una refinada perrita de familia y un perro callejero viven una inolvidable aventura que cambiará sus vidas para siempre.",
                             Director = "Hamilton Luske, Clyde Geronimi, Wilfred Jackson",
                             Duracion = 76,
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/c/c1/Lady_and_the_Tramp_1955_poster.jpg",
@@ -5687,6 +5691,7 @@ namespace MovieHubAPI.Migrations
                         {
                             Id = 131,
                             Anio = 1989,
+                            Descripcion = "Una joven sirena sueña con conocer el mundo de los humanos y hará un arriesgado trato para perseguir el amor y su libertad.",
                             Director = "John Musker, Ron Clements",
                             Duracion = 83,
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/c/c0/The_Little_Mermaid_%28Official_1989_Film_Poster%29.png",
@@ -5697,6 +5702,7 @@ namespace MovieHubAPI.Migrations
                         {
                             Id = 132,
                             Anio = 1991,
+                            Descripcion = "Una joven amante de la lectura descubre que la verdadera belleza se encuentra en el interior mientras intenta romper una antigua maldición.",
                             Director = "Gary Trousdale, Kirk Wise",
                             Duracion = 84,
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/5/5e/Beauty_and_the_Beast_%281991_film%29_poster.jpg",
@@ -5707,6 +5713,7 @@ namespace MovieHubAPI.Migrations
                         {
                             Id = 133,
                             Anio = 1992,
+                            Descripcion = "Un joven de buen corazón encuentra una lámpara mágica que cambiará su destino y lo llevará a vivir una aventura llena de magia, peligros y amor.",
                             Director = "John Musker, Ron Clements",
                             Duracion = 90,
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/2/26/Aladdin_%281992_film%29_poster.jpg",
@@ -5717,6 +5724,7 @@ namespace MovieHubAPI.Migrations
                         {
                             Id = 134,
                             Anio = 1995,
+                            Descripcion = "Una valiente joven indígena lucha por proteger a su pueblo mientras descubre el valor del respeto, la naturaleza y el entendimiento entre culturas.",
                             Director = "Mike Gabriel, Eric Goldberg",
                             Duracion = 81,
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/4/47/Pocahontas_%281995_film%29_poster.jpg",
@@ -5727,6 +5735,7 @@ namespace MovieHubAPI.Migrations
                         {
                             Id = 135,
                             Anio = 1996,
+                            Descripcion = "Un joven con un gran corazón vive aislado en la catedral de Notre Dame hasta que una inesperada amistad lo impulsa a enfrentarse a la injusticia.",
                             Director = "Gary Trousdale, Kirk Wise",
                             Duracion = 91,
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/6/69/The_Hunchback_of_Notre_Dame_%281996_film%29_poster.jpg",
@@ -5770,6 +5779,7 @@ namespace MovieHubAPI.Migrations
                         {
                             Id = 139,
                             Anio = 2009,
+                            Descripcion = "Una joven decidida ve cómo un inesperado hechizo cambia su vida y la embarca en una aventura llena de magia, amistad y sueños por cumplir.",
                             Director = "John Musker, Ron Clements",
                             Duracion = 98,
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/7/75/Princess_and_the_frog_poster.jpg",
@@ -5879,6 +5889,7 @@ namespace MovieHubAPI.Migrations
                         {
                             Id = 149,
                             Anio = 2023,
+                            Descripcion = "Una joven llena de imaginación emprende un viaje para descubrir el verdadero significado de los deseos, el valor y la esperanza.",
                             Director = "Chris Buck, Fawn Veerasunthorn",
                             Duracion = 95,
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/2/2e/Wish_%282023_film%29_poster.png",
@@ -6186,6 +6197,7 @@ namespace MovieHubAPI.Migrations
                         {
                             Id = 177,
                             Anio = 2025,
+                            Descripcion = "Un niño apasionado por el espacio se embarca en una extraordinaria aventura intergaláctica que pondrá a prueba su valentía y su capacidad para encontrar su lugar en el universo.",
                             Director = "Madeline Sharafian, Domee Shi, Adrian Molina",
                             Duracion = 102,
                             PosterUrl = "https://via.placeholder.com/300x450?text=Elio",
@@ -6262,6 +6274,7 @@ namespace MovieHubAPI.Migrations
                         {
                             Id = 184,
                             Anio = 1952,
+                            Descripcion = "Una estrella del cine mudo y una joven aspirante encuentran el amor mientras Hollywood se adapta a la llegada del cine sonoro.",
                             Director = "Gene Kelly, Stanley Donen",
                             Duracion = 103,
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/4/44/Singin%27_in_the_Rain_%281952_poster%29.jpg",
@@ -6745,6 +6758,7 @@ namespace MovieHubAPI.Migrations
                         {
                             Id = 228,
                             Anio = 1998,
+                            Descripcion = "Un hombre despreocupado se ve envuelto por error en una enrevesada trama criminal que dará lugar a una sucesión de situaciones tan absurdas como inolvidables.",
                             Director = "Joel Coen",
                             Duracion = 117,
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/3/35/Biglebowskiposter.jpg",
