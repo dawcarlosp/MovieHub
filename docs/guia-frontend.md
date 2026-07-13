@@ -10,50 +10,54 @@ Rol asignado: **[@claauudiiaacr](https://github.com/claauudiiaacr)** — rama `f
 
 - Angular 22 (standalone components, sin NgModules)
 - Build system: `@angular/build` (Vite/esbuild)
-- Angular Material (pendiente de instalar: `ng add @angular/material`)
+- Angular Material (M3 con tema custom Netflix oscuro)
 - SCSS para estilos
 - Señales (Signals) para estado reactivo
 - Tests: Vitest (integrados por defecto en Angular CLI 22)
 
 ---
 
-## Estructura de carpetas (propuesta)
+## Estructura de carpetas (actual)
 
-Actualmente el proyecto solo tiene el scaffold inicial (`app/` con componente raíz). La estructura recomendada es:
+Actualmente el proyecto sigue esta estructura:
 
 ```
 src/app/
-├── core/                      # Singleton services, interceptors, guards
+├── core/                      # Singleton services, interceptors, layout
+│   ├── interceptors/
+│   │   └── error.interceptor.ts
+│   ├── layout/
+│   │   └── navbar.component.ts
 │   └── services/
-├── shared/                    # Componentes reutilizables
-│   ├── components/
-│   │   ├── estrella-valoracion/
-│   │   └── buscador/
-│   └── pipes/
-│
+│       └── movie-state.service.ts
+├── shared/                    # Componentes reutilizables, pipes, utilidades
+│   ├── pipes/
+│   │   ├── truncate.pipe.ts
+│   │   └── rating-percent.pipe.ts
+│   ├── utils/
+│   │   └── track-by.ts
+│   ├── types/
+│   │   └── index.ts
+│   └── constants.ts
 ├── features/                  # Carpetas por funcionalidad
-│   ├── peliculas/
-│   │   ├── pages/
-│   │   │   ├── listado-peliculas/
-│   │   │   └── detalle-pelicula/
-│   │   ├── components/
-│   │   ├── services/
-│   │   │   └── pelicula.service.ts
-│   │   ├── models/
-│   │   │   └── pelicula.model.ts
-│   │   └── peliculas.routes.ts
-│   ├── generos/
-│   ├── auth/
-│   └── favoritos/
-│
+│   ├── home/
+│   │   ├── home-page.component.ts
+│   │   ├── hero-section.component.ts
+│   │   ├── movie-row.component.ts
+│   │   └── movie-card.component.ts
+│   ├── genero/
+│   │   ├── genero-page.component.ts
+│   │   └── genre-banner.component.ts
+│   └── loading/
+│       └── skeleton.component.ts
+├── services/                  # Servicios HTTP (movie.service, genero.service)
+├── models/                    # Interfaces TypeScript (Movie, Genero, etc.)
 ├── app.component.ts
 ├── app.config.ts
 └── app.routes.ts
 ```
 
----
-
-## Orden de creación (para una nueva feature)
+Para crear una nueva feature, sigue este orden:
 
 ```
 Model → Service → Componente → Ruta
@@ -192,30 +196,30 @@ export const PELICULAS_ROUTES: Routes = [
 ];
 ```
 
-Y se registran en `app.routes.ts` con lazy loading (actualmente el array de rutas está vacío):
+Y se registran en `app.routes.ts` con lazy loading (actualmente con rutas para carga diferida):
 
 ```typescript
 // app.routes.ts
 export const routes: Routes = [
-  { path: '', redirectTo: '/peliculas', pathMatch: 'full' },
+  { path: '', redirectTo: '/inicio', pathMatch: 'full' },
   {
-    path: 'peliculas',
-    loadChildren: () =>
-      import('./features/peliculas/peliculas.routes').then((r) => r.PELICULAS_ROUTES),
+    path: 'inicio',
+    loadComponent: () =>
+      import('./features/home/home-page.component').then(c => c.HomePageComponent)
   },
   {
-    path: 'generos',
-    loadChildren: () =>
-      import('./features/generos/generos.routes').then((r) => r.GENEROS_ROUTES),
-  },
+    path: 'genero/:nombre',
+    loadComponent: () =>
+      import('./features/genero/genero-page.component').then(c => c.GeneroPageComponent)
+  }
 ];
 ```
 
 ---
 
-## Configurar HttpClient (NO lo olvides)
+## Configurar HttpClient
 
-> ⚠️ **Pendiente:** Actualmente `HttpClient` no está configurado. Añádelo en `app.config.ts`:
+> ✅ `HttpClient` ya está configurado en `app.config.ts` con `provideHttpClient(withFetch())` y el interceptor global de errores.
 
 ```typescript
 import { provideHttpClient, withFetch } from '@angular/common/http';
@@ -235,27 +239,19 @@ No olvides instalar `@angular/common/http` si no está (debería venir incluido 
 
 ## Angular Material
 
-> ⚠️ **Pendiente de instalar.** Actualmente el proyecto no incluye Angular Material.
+> ✅ Angular Material ya está instalado (v22) con un tema M3 custom oscuro (paleta roja Netflix, fondo #141414). El tema se configura en `src/styles.scss` mediante `mat.define-theme()`.
 
-Instálalo:
-
-```bash
-ng add @angular/material   # (Terminal normal)
-```
-
-Elige un tema, incluye tipografía y animaciones.
-
-Componentes que seguramente uses:
+Componentes que se usan actualmente:
 
 | Componente | Uso |
 |---|---|
-| `<mat-toolbar>` | Barra de navegación |
-| `<mat-card>` | Ficha de película |
-| `<mat-form-field>` + `<mat-select>` | Filtros por género |
-| `<mat-table>` | Listados |
-| `<mat-icon>` | Iconos (estrella para valoración) |
-| `<mat-dialog>` | Formularios de alta/edición |
-| `<mat-progress-spinner>` | Cargando... |
+| `<mat-toolbar>` | Barra de navegación (NavbarComponent) |
+| `<mat-card>` | Tarjetas de película (MovieCardComponent) |
+| `<mat-menu>` | Menú de géneros desktop + hamburguesa móvil |
+| `<mat-chip-set>` / `<mat-chip>` | Etiquetas de género en héroe y cards |
+| `<mat-icon>` | Iconos (search, play_arrow, account_circle, home, etc.) |
+| `<mat-divider>` | Separadores en footer y menú hamburguesa |
+| `<mat-button>` / `<mat-icon-button>` / `<mat-raised-button>` / `<mat-stroked-button>` | Botones de navegación y acciones |
 
 ---
 

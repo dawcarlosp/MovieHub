@@ -143,56 +143,34 @@ ng test
 
 ---
 
-## 3. GitHub Actions (CI/CD) — **Pendiente de crear**
+## 3. GitHub Actions (CI/CD) — Configurado con SonarCloud
 
-> ⚠️ El directorio `.github/workflows/` **está vacío**. No hay pipeline configurada aún.
+> ✅ Ya existe el archivo `.github/workflows/build.yml` con análisis de SonarCloud para el backend.
+> Se ejecuta en pushes y PRs a `main` usando `windows-latest`, .NET 10 y Node.js 24.
 
-### Estructura propuesta
+### Pipeline actual (`.github/workflows/build.yml`)
 
-Crea un archivo `.github/workflows/ci.yml`:
+El workflow actual analiza el backend con SonarCloud en cada push/PR a `main`:
 
 ```yaml
-name: CI
-
+name: SonarCloud Full Stack Analysis
 on:
-  push:
-    branches: [main, feature/*]
-  pull_request:
-    branches: [main]
-
+  push: { branches: [main] }
+  pull_request: { branches: [main] }
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
-    
+  build:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.x'
-      
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      
-      - name: Restore dependencies
-        run: dotnet restore MovieHubAPI
-      
-      - name: Build
-        run: dotnet build MovieHubAPI --no-restore
-      
-      - name: Test
-        run: dotnet test MovieHubAPI --no-build --verbosity normal
+      - uses: actions/setup-java@v3 { with: { java-version: 17 } }
+      - uses: actions/setup-dotnet@v3 { with: { dotnet-version: '10.0.x' } }
+      - uses: actions/setup-node@v3 { with: { node-version: '24' } }
+      - run: dotnet restore MovieHubAPI/MovieHubAPI.slnx
+      - run: dotnet build MovieHubAPI/MovieHubAPI.slnx
+      - uses: SonarSource/sonarcloud-github-action
 ```
 
-### Checklist para la pipeline (cuando se cree)
-
-- [ ] Compila el backend (`dotnet build` *(Terminal normal)*)
-- [ ] Compila el frontend (`ng build` *(Terminal normal)*)
-- [ ] Pasan los tests del backend (`dotnet test` *(Terminal normal)*)
-- [ ] Pasan los tests del frontend (`ng test` *(Terminal normal)*)
+> 💡 Pendiente añadir test coverage y compilación del frontend a la pipeline.
 
 ---
 
