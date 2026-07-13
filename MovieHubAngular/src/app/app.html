@@ -51,7 +51,9 @@
 
     <mat-divider class="hamburger__divider" />
 
-    <button mat-menu-item class="hamburger__trigger" (click)="togglePeliculas()">
+    <button mat-menu-item class="hamburger__trigger"
+            [class.hamburger__trigger--expanded]="peliculasExpanded()"
+            (click)="togglePeliculas()">
       <mat-icon>movie</mat-icon>
       <span>Películas</span>
       <mat-icon class="hamburger__chevron">expand_more</mat-icon>

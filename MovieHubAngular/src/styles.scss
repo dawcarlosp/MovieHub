@@ -104,31 +104,46 @@ body {
     margin-right: 0;
   }
 
-  // Cabecera "Películas" (no clickeable)
-  .hamburger__header {
-    opacity: 1 !important;
-    font-size: 0.75rem !important;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    min-height: 36px !important;
-    padding-top: 0.25rem;
-    color: var(--mh-text-muted) !important;
-    cursor: default;
+  // Botón "Películas" (toggle del acordeón)
+  .hamburger__trigger {
+    font-weight: 600;
 
-    .mat-icon {
-      font-size: 1.1rem;
-      width: 1.1rem;
-      height: 1.1rem;
+    .mat-icon:first-child {
+      font-size: 1.15rem;
+      width: 1.15rem;
+      height: 1.15rem;
       color: var(--mh-text-dim);
     }
   }
 
-  // Items de género (ligeramente indentados)
+  // Chevron que rota al expandir
+  .hamburger__chevron {
+    margin-left: auto !important;
+    transition: transform 0.25s ease;
+  }
+
+  // Rotar chevron cuando el acordeón está expandido
+  .hamburger__trigger--expanded .hamburger__chevron {
+    transform: rotate(180deg);
+  }
+
+  // Contenedor de géneros (aparece bajo el trigger)
+  .hamburger__sub {
+    background: rgba(0, 0, 0, 0.15);
+    margin: 0;
+    overflow: hidden;
+  }
+
+  // Items de género (indentados)
   .hamburger__genre {
-    padding-left: 1rem !important;
+    padding-left: 1.5rem !important;
     font-size: 0.85rem !important;
     min-height: 38px !important;
+    color: var(--mh-text-muted) !important;
+
+    &:hover {
+      color: var(--mh-text) !important;
+    }
   }
 
   // Divisores entre secciones
