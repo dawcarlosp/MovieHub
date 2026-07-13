@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, effect } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDialog } from '@angular/material/dialog';
@@ -46,11 +46,17 @@ export class App implements OnInit {
   protected readonly selectedGenero = signal<Genero | null>(null);
   protected readonly activeView = signal<ActiveView>('home');
   protected readonly peliculasExpanded = signal(false);
-  protected readonly showLogin = computed(() => this.auth.currentUser() === null);
+  protected readonly showLogin = signal(false);
   protected readonly selectedMovie = signal<Movie | null>(null);
 
   protected readonly state = this.movieState;
   protected readonly authService = this.auth;
+
+  constructor() {
+    effect(() => {
+      this.showLogin.set(this.auth.currentUser() === null);
+    });
+  }
 
   ngOnInit(): void {
     if (!this.auth.isLoggedIn()) return;
@@ -67,6 +73,7 @@ export class App implements OnInit {
   }
 
   onLoginClick(): void {
+    this.showLogin.set(true);
   }
 
   onLogoutClick(): void {
