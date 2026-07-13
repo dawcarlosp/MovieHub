@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 
@@ -19,7 +18,7 @@ import { ActiveView } from './shared/types';
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet, CommonModule, NavbarComponent,
+    CommonModule, NavbarComponent,
     SkeletonComponent, HomePageComponent, GeneroPageComponent,
     MatIconModule, MatDividerModule
   ],
