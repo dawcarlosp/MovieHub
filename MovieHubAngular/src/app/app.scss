@@ -472,4 +472,40 @@
       display: none;
     }
   }
+
+  // Cards en móvil — grid de 2 columnas en vez de scroll horizontal
+  .row {
+    &__track {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      overflow: visible;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+
+  .card {
+    width: auto;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  // Skeleton cards en móvil
+  .skeleton {
+    &__track {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+
+    &__card {
+      width: auto;
+    }
+  }
 }
