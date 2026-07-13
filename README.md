@@ -14,10 +14,11 @@ Plataforma web para gestionar un catálogo de películas: exploración, valoraci
 - **Swagger:** Documentación interactiva disponible en `/swagger`
 - **CORS:** Permitido para `http://localhost:4200`
 - **Frontend:** UI Netflix-style completa con catálogo agrupado por género, héroe con Ken Burns, skeleton loading, diseño responsive
-- **Angular Material:** Tema M3 custom oscuro con paleta roja Netflix, componentes: mat-toolbar, mat-card, mat-menu, mat-chip, mat-icon, mat-divider
+- **Angular Material:** Tema M3 custom oscuro con paleta roja Netflix, componentes: mat-toolbar, mat-card, mat-menu, mat-chip, mat-icon, mat-divider, mat-dialog, mat-snack-bar, mat-form-field
 - **Environment:** Archivos `environment.ts` / `environment.prod.ts` con `apiUrlBase` centralizado y `fileReplacements`
 - **Arquitectura frontend:** Componentes standalone con lazy loading (`core/`, `shared/`, `features/`), `ChangeDetectionStrategy.OnPush`, señales, pipes puros, interceptor HTTP global
 - **Auth JWT:** Autenticación activa con `AddAuthentication` + `AddJwtBearer`. Endpoints protegidos con `[Authorize]` (excepto register/login). Token vía `POST /api/Usuarios/login` y botón Authorize en Swagger
+- **Auth Frontend:** LoginPageComponent, RegisterDialogComponent (modal con validaciones por campo), AuthService con localStorage, AuthInterceptor con Bearer token, snack-bar de notificaciones, navbar con estado de sesión
 
 ### Pendiente
 - **Tests:** Proyecto de tests no creado (backend xUnit + frontend Vitest)
@@ -53,10 +54,10 @@ MovieHub/
 ├── MovieHubAngular/      # Frontend - Angular (core/, shared/, features/)
 │   └── src/
 │       ├── environments/ # environment.ts + .prod.ts
-│       └── app/
-│           ├── core/     # Interceptors, layout, servicios singleton
+│   └── app/
+│           ├── core/     # Interceptors, layout, servicios singleton (auth, movie-state)
 │           ├── shared/   # Pipes, utilidades, constantes, tipos
-│           └── features/ # home/, genero/, loading/
+│           └── features/ # home/, genero/, auth/, loading/
 ├── docs/                 # Guías por rol
 ├── .github/workflows/    # CI SonarCloud
 ├── README.md
