@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MovieHubAPI.ApiDefinitions;
 using MovieHubAPI.DTOs;
 using MovieHubAPI.DTOs.Pelicula;
@@ -10,6 +11,7 @@ namespace MovieHubAPI.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Tags("Películas")]
+    [Authorize]
     public class PeliculasController : ControllerBase, IPeliculaApi
     {
         private readonly IPeliculaService _peliculaService;
@@ -24,6 +26,7 @@ namespace MovieHubAPI.Controllers
         [EndpointDescription("Devuelve una página de películas con información detallada.")]
         [ProducesResponseType<PaginadosDto<PeliculaDto>>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<PaginadosDto<PeliculaDto>>> GetAll(
               [Description("Número de página (empieza en 1)")][FromQuery] int page = 1,
         [Description("Elementos por página (máx 50)")][FromQuery] int pageSize = 10)
@@ -37,6 +40,7 @@ namespace MovieHubAPI.Controllers
         [EndpointSummary("Obtener película por ID")]
         [ProducesResponseType<PeliculaDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<PeliculaDto>> GetById(int id)
         {
             var pelicula = await _peliculaService.GetByIdAsync(id);
@@ -47,6 +51,7 @@ namespace MovieHubAPI.Controllers
         [EndpointSummary("Crear nueva película")]
         [ProducesResponseType<PeliculaDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<PeliculaDto>> Create(CreatePeliculaDto dto)
         {
             var pelicula = await _peliculaService.CreateAsync(dto);
@@ -57,6 +62,7 @@ namespace MovieHubAPI.Controllers
         [EndpointSummary("Actualizar película existente")]
         [ProducesResponseType<PeliculaDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<PeliculaDto>> Update(int id, UpdatePeliculaDto dto)
         {
             var pelicula = await _peliculaService.UpdateAsync(id, dto);
@@ -68,6 +74,7 @@ namespace MovieHubAPI.Controllers
         [EndpointSummary("Eliminar película")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Delete(int id)
         {
             var deleted = await _peliculaService.DeleteAsync(id);
