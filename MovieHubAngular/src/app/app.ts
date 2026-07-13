@@ -16,6 +16,7 @@ import { GeneroPageComponent } from './features/genero/genero-page.component';
 import { LoginPageComponent } from './features/auth/login-page.component';
 import { RegisterDialogComponent } from './features/auth/register-dialog.component';
 import { MovieDetailPageComponent } from './features/peliculas/movie-detail-page.component';
+import { FavoritosPageComponent } from './features/peliculas/favoritos-page.component';
 
 import { Movie, MovieRow } from './models/movie.model';
 import { Genero } from './models/genero.model';
@@ -28,7 +29,7 @@ import { TrailerDialogComponent } from './features/peliculas/trailer-dialog.comp
   imports: [
     CommonModule, NavbarComponent,
     SkeletonComponent, HomePageComponent, GeneroPageComponent,
-    LoginPageComponent, MovieDetailPageComponent,
+    LoginPageComponent, MovieDetailPageComponent, FavoritosPageComponent,
     MatIconModule, MatDividerModule
   ],
   templateUrl: './app.html',
@@ -108,6 +109,11 @@ export class App implements OnInit {
       width: '480px',
       disableClose: true
     });
+  }
+
+  goToFavoritos(): void {
+    this.selectedMovie.set(null);
+    this.activeView.set('favoritos');
   }
 
   onBackFromDetail(): void {
