@@ -5,12 +5,13 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { routes } from './app.routes';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(withFetch(), withInterceptors([errorInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([errorInterceptor, authInterceptor])),
     provideAnimations()
   ]
 };
