@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { AuthService } from '../../core/services/auth.service';
@@ -34,7 +35,7 @@ function passwordStrengthValidator(): ValidatorFn {
   imports: [
     CommonModule, ReactiveFormsModule,
     MatDialogModule, MatButtonModule,
-    MatFormFieldModule, MatInputModule, MatIconModule, MatTooltipModule
+    MatFormFieldModule, MatInputModule, MatIconModule, MatTooltipModule, MatSnackBarModule
   ],
   templateUrl: './register-dialog.component.html',
   styleUrl: './register-dialog.component.scss'
@@ -42,6 +43,7 @@ function passwordStrengthValidator(): ValidatorFn {
 export class RegisterDialogComponent {
   private readonly auth = inject(AuthService);
   private readonly dialogRef = inject(MatDialogRef<RegisterDialogComponent>);
+  private readonly snackBar = inject(MatSnackBar);
 
   readonly form = new FormGroup({
     userName: new FormControl('', {
@@ -81,15 +83,18 @@ export class RegisterDialogComponent {
     const { userName, email, password } = this.form.getRawValue();
 
     this.auth.register({ userName, email, password }).subscribe({
-      next: () => this.dialogRef.close(true),
+      next: () => {
+        this.snackBar.open('Cuenta creada correctamente', '', { duration: 3000 });
+        this.dialogRef.close(true);
+      },
       error: (err: HttpErrorResponse) => {
         this.submitting = false;
         if (err.error?.errors) {
           this.fieldErrors = err.error.errors;
         } else if (err.error?.message) {
-          this.generalError = err.error.message;
+          this.snackBar.open(err.error.message, 'Cerrar', { duration: 5000 });
         } else {
-          this.generalError = 'Error al registrar. Inténtalo de nuevo.';
+          this.snackBar.open('Error al registrar. Inténtalo de nuevo.', 'Cerrar', { duration: 5000 });
         }
       }
     });
