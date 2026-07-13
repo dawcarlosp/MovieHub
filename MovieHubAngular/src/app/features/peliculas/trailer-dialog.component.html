@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>
+  <mat-icon>videocam</mat-icon>
+  Añadir tráiler
+</h2>
+
+<mat-dialog-content>
+  <p class="trailer__hint">
+    ¿Tienes un enlace al tráiler de esta película?
+    Pégalo aquí y lo abriremos en una nueva pestaña.
+  </p>
+
+  <mat-form-field appearance="outline" class="trailer__field">
+    <mat-label>URL del tráiler</mat-label>
+    <input matInput [formControl]="url" type="url" autocomplete="off"
+           placeholder="https://www.youtube.com/watch?v=..." />
+    <mat-icon matIconPrefix>link</mat-icon>
+    @if (url.invalid && url.touched) {
+      <mat-error>La URL es obligatoria.</mat-error>
+    }
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close type="button">Cancelar</button>
+  <button mat-raised-button color="primary" type="button" (click)="openUrl()" [disabled]="url.invalid">
+    <mat-icon>open_in_new</mat-icon>
+    Abrir
+  </button>
+</mat-dialog-actions>

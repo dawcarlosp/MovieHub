@@ -1,0 +1,23 @@
+[mat-dialog-title] {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--mh-font-display);
+  font-size: 1.4rem;
+  letter-spacing: 0.02em;
+
+  .mat-icon {
+    color: var(--mh-red);
+  }
+}
+
+.trailer__hint {
+  color: var(--mh-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 0 1rem;
+}
+
+.trailer__field {
+  width: 100%;
+}
