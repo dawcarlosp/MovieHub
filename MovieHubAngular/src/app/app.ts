@@ -69,6 +69,11 @@ export class App implements OnInit {
     this.showLogin.set(true);
   }
 
+  onLogoutClick(): void {
+    this.auth.logout();
+    this.showLogin.set(true);
+  }
+
   onRegisterClick(): void {
     const ref = this.dialog.open(RegisterDialogComponent, {
       width: '420px',

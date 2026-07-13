@@ -43,7 +43,7 @@
           <span>{{ authService.currentUser()?.userName }}</span>
         </span>
         <mat-divider class="hamburger__divider" />
-        <button mat-menu-item (click)="authService.logout(); homeClick.emit()">
+        <button mat-menu-item (click)="logoutClick.emit()">
           <mat-icon>logout</mat-icon>
           <span>Cerrar sesión</span>
         </button>

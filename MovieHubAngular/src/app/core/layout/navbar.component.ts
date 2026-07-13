@@ -36,6 +36,7 @@ export class NavbarComponent {
   readonly togglePeliculas = output<void>();
   readonly loginClick = output<void>();
   readonly registerClick = output<void>();
+  readonly logoutClick = output<void>();
 
   protected readonly trackByGeneroId = trackByGeneroId;
   protected readonly authService = this.auth;
