@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>Crear cuenta</h2>
+
+<mat-dialog-content>
+  @if (generalError) {
+    <div class="error-banner" role="alert">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ generalError }}</span>
+    </div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    <mat-form-field appearance="outline" class="auth-field">
+      <mat-label>Usuario</mat-label>
+      <input matInput formControlName="userName" type="text" autocomplete="username" placeholder="Tu nombre de usuario" />
+      <mat-icon matIconPrefix>person</mat-icon>
+      @if (fieldError('UserName')) {
+        <mat-error>{{ fieldError('UserName') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="auth-field">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" autocomplete="email" placeholder="correo@ejemplo.com" />
+      <mat-icon matIconPrefix>email</mat-icon>
+      @if (fieldError('Email')) {
+        <mat-error>{{ fieldError('Email') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="auth-field">
+      <mat-label>Contraseña</mat-label>
+      <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" autocomplete="new-password" placeholder="Mín. 6 caracteres" />
+      <mat-icon matIconPrefix>lock</mat-icon>
+      <button mat-icon-button matIconSuffix type="button" (click)="hidePassword = !hidePassword" [attr.aria-label]="hidePassword ? 'Mostrar contraseña' : 'Ocultar contraseña'" matTooltip="Mostrar contraseña">
+        <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      @if (fieldError('Password')) {
+        <mat-error>{{ fieldError('Password') }}</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close type="button">Cancelar</button>
+  <button mat-raised-button color="primary" type="submit" (click)="onSubmit()" [disabled]="form.invalid || submitting">
+    @if (submitting) {
+      <span>Creando cuenta…</span>
+    } @else {
+      <span>Crear cuenta</span>
+    }
+  </button>
+</mat-dialog-actions>
