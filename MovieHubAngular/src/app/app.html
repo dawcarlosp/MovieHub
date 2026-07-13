@@ -13,6 +13,7 @@
       (loginClick)="onLoginClick()"
       (registerClick)="onRegisterClick()"
       (logoutClick)="onLogoutClick()"
+      (favoritosClick)="goToFavoritos()"
     />
 
     @if (loading()) {
@@ -48,6 +49,10 @@
           <app-genero-page [genero]="genero" [rows]="state.filterByGenre(genero.nombre)" />
         }
       }
+    }
+
+    @if (activeView() === 'favoritos') {
+      <app-favoritos-page />
     }
 
     <mat-divider />

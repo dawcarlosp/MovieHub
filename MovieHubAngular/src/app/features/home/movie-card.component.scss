@@ -8,6 +8,7 @@
               box-shadow 0.35s ease;
   overflow: hidden;
   border: none !important;
+  position: relative;
 
   &:hover {
     transform: scale(1.15);
@@ -25,6 +26,13 @@
     aspect-ratio: 2 / 3;
     object-fit: cover;
     display: block;
+  }
+
+  &__fav {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    z-index: 2;
   }
 
   &__overlay {
@@ -61,5 +69,15 @@
   &__rating {
     color: #46d369;
     font-weight: 700;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: auto;
+
+    &:hover {
+      transform: scale(1.05);
+    }
   }
 }

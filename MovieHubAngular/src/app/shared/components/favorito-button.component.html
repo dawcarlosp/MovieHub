@@ -1,0 +1,4 @@
+@let esFav = favoritoState.esFavorito(peliculaId());
+<button mat-icon-button class="fav-btn" [class.fav-btn--active]="esFav" (click)="toggle()" [attr.aria-label]="esFav ? 'Quitar de favoritos' : 'Añadir a favoritos'" matTooltip="Añadir a favoritos">
+  <mat-icon>{{ esFav ? 'favorite' : 'favorite_border' }}</mat-icon>
+</button>

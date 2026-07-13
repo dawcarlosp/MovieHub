@@ -1,4 +1,4 @@
-export type ActiveView = 'home' | 'genero' | 'detalle';
+export type ActiveView = 'home' | 'genero' | 'detalle' | 'favoritos';
 
 export interface AuthResponse {
   token: string;

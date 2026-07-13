@@ -10,6 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { Movie } from '../../models/movie.model';
 import { StarRatingComponent } from '../../shared/components/star-rating.component';
+import { FavoritoButtonComponent } from '../../shared/components/favorito-button.component';
 import { ValoracionService } from '../../core/services/valoracion.service';
 import { AuthService } from '../../core/services/auth.service';
 import { TrailerDialogComponent } from './trailer-dialog.component';
@@ -19,7 +20,7 @@ import { TrailerDialogComponent } from './trailer-dialog.component';
   standalone: true,
   imports: [
     CommonModule, MatButtonModule, MatIconModule,
-    MatChipsModule, MatTooltipModule, StarRatingComponent
+    MatChipsModule, MatTooltipModule, StarRatingComponent, FavoritoButtonComponent
   ],
   templateUrl: './movie-detail-page.component.html',
   styleUrl: './movie-detail-page.component.scss'

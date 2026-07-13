@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { MovieStateService } from './core/services/movie-state.service';
 import { AuthService } from './core/services/auth.service';
+import { FavoritoStateService } from './core/services/favorito-state.service';
 import { GeneroService } from './services/genero.service';
 import { MovieService } from './services/movie.service';
 import { NavbarComponent } from './core/layout/navbar.component';
@@ -15,6 +16,7 @@ import { GeneroPageComponent } from './features/genero/genero-page.component';
 import { LoginPageComponent } from './features/auth/login-page.component';
 import { RegisterDialogComponent } from './features/auth/register-dialog.component';
 import { MovieDetailPageComponent } from './features/peliculas/movie-detail-page.component';
+import { FavoritosPageComponent } from './features/peliculas/favoritos-page.component';
 
 import { Movie, MovieRow } from './models/movie.model';
 import { Genero } from './models/genero.model';
@@ -27,7 +29,7 @@ import { TrailerDialogComponent } from './features/peliculas/trailer-dialog.comp
   imports: [
     CommonModule, NavbarComponent,
     SkeletonComponent, HomePageComponent, GeneroPageComponent,
-    LoginPageComponent, MovieDetailPageComponent,
+    LoginPageComponent, MovieDetailPageComponent, FavoritosPageComponent,
     MatIconModule, MatDividerModule
   ],
   templateUrl: './app.html',
@@ -36,6 +38,7 @@ import { TrailerDialogComponent } from './features/peliculas/trailer-dialog.comp
 export class App implements OnInit {
   private readonly movieState = inject(MovieStateService);
   private readonly auth = inject(AuthService);
+  private readonly favoritoState = inject(FavoritoStateService);
   private readonly movieService = inject(MovieService);
   private readonly generoService = inject(GeneroService);
   private readonly dialog = inject(MatDialog);
@@ -60,6 +63,7 @@ export class App implements OnInit {
 
   ngOnInit(): void {
     if (!this.auth.isLoggedIn()) return;
+    this.favoritoState.loadFavoritos();
     this.loadGeneros();
     this.loadMovies();
   }
@@ -68,6 +72,7 @@ export class App implements OnInit {
     this.error.set(null);
     this.loading.set(true);
     this.goHome();
+    this.favoritoState.loadFavoritos();
     this.loadGeneros();
     this.loadMovies();
   }
@@ -104,6 +109,11 @@ export class App implements OnInit {
       width: '480px',
       disableClose: true
     });
+  }
+
+  goToFavoritos(): void {
+    this.selectedMovie.set(null);
+    this.activeView.set('favoritos');
   }
 
   onBackFromDetail(): void {

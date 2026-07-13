@@ -20,7 +20,7 @@ Plataforma web para gestionar un catálogo de películas: exploración, valoraci
 - **Arquitectura frontend:** Componentes standalone con lazy loading (`core/`, `shared/`, `features/`), `ChangeDetectionStrategy.OnPush`, señales, pipes puros, interceptor HTTP global
 - **Auth JWT:** Autenticación activa con `AddAuthentication` + `AddJwtBearer`. Endpoints protegidos con `[Authorize]` (excepto register/login). Token vía `POST /api/Usuarios/login` y botón Authorize en Swagger
 - **Valoraciones (1-5):** CRUD completo con recálculo automático de puntuación media por película. Endpoints protegidos. Endpoint público para consultar valoraciones de una película
-- **Favoritos:** Añadir, quitar y listar películas favoritas por usuario. Endpoints protegidos
+- **Favoritos:** Añadir/quitar con botón corazón en cards y detalle. Página "Mi lista" con grid de favoritas. Estado global via FavoritoStateService con update optimista
 - **Búsqueda + Filtros:** Endpoint `GET /api/peliculas` con params `?titulo=`, `?generoId=`, `?orden=` (puntuacion, anio)
 - **Rankings:** Endpoints `GET /api/peliculas/mejor-valoradas` (top 10) y `GET /api/peliculas/mas-recientes` (top 10)
 - **Estadísticas:** Endpoint `GET /api/peliculas/estadisticas` con total películas, media global, total géneros, total valoraciones
@@ -30,7 +30,6 @@ Plataforma web para gestionar un catálogo de películas: exploración, valoraci
 
 ### Pendiente
 - **Tests:** Proyecto de tests no creado (backend xUnit + frontend Vitest)
-- **Funcionalidades extra:** Valoraciones, Favoritos, Estadísticas, Búsqueda/Filtros — pendientes de implementar
 
 > Hasta que la pipeline y los tests estén operativos, cada Pull Request debe probarse manualmente antes de fusionar.
 

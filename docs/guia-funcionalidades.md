@@ -67,26 +67,21 @@ Componente estrella-valoracion (reutilizable)
   → Se refresca puntuacionMedia
 ```
 
-### Favoritos — **Backend implementado** 🟢
+### Favoritos — **Completado** ✅
 
 **Modelo existente:** `FavoritoModel` con clave compuesta `(UsuarioId, PeliculaId)`.
 
-**Backend (implementado):**
-
+**Backend:**
 ```csharp
 GET    /api/favoritos                    // listar favoritos del usuario (requiere auth)
 POST   /api/favoritos/{peliculaId}       // añadir a favoritos (requiere auth)
 DELETE /api/favoritos/{peliculaId}       // quitar de favoritos (requiere auth)
 ```
 
-**Frontend (pendiente):**
-
-```
-Botón corazón en ficha de película
-  → Si está en favoritos → corazón relleno
-  → Al hacer clic → POST o DELETE
-  → Listado en /favoritos
-```
+**Frontend:**
+- `FavoritoButtonComponent` — botón corazón en cards y detalle, toggle optimista con POST/DELETE
+- `FavoritoStateService` — estado global con `Set<number>` de IDs, carga al iniciar sesión
+- `FavoritosPageComponent` — página "Mi lista" con grid de favoritas, navegación desde navbar
 
 ### Búsqueda por título + filtros — **Backend implementado** 🟢
 

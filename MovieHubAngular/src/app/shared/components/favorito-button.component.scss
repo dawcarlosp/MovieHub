@@ -1,0 +1,22 @@
+.fav-btn {
+  color: var(--mh-text-muted);
+  transition: color 0.2s ease, transform 0.2s ease;
+
+  &--active {
+    color: var(--mh-red);
+
+    .mat-icon {
+      animation: fav-pop 0.3s ease;
+    }
+  }
+
+  &:hover {
+    transform: scale(1.15);
+  }
+}
+
+@keyframes fav-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}

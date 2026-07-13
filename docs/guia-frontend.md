@@ -32,11 +32,13 @@ src/app/
 │   └── services/
 │       ├── movie-state.service.ts
 │       ├── auth.service.ts
+│       ├── favorito-state.service.ts   # Estado global de favoritos (Set de IDs + toggle optimista)
 │       ├── valoracion.service.ts
 │       └── favorito.service.ts
 ├── shared/                    # Componentes reutilizables, pipes, utilidades
 │   ├── components/
-│   │   └── star-rating.component.ts  # Valoración 1-5 estrellas
+│   │   ├── star-rating.component.ts   # Valoración 1-5 estrellas
+│   │   └── favorito-button.component.ts # Botón corazón con toggle optimista
 │   ├── pipes/
 │   │   ├── truncate.pipe.ts
 │   │   └── rating-percent.pipe.ts
@@ -59,7 +61,8 @@ src/app/
 │   │   └── register-dialog.component.ts
 │   ├── peliculas/
 │   │   ├── movie-detail-page.component.ts
-│   │   └── trailer-dialog.component.ts
+│   │   ├── trailer-dialog.component.ts
+│   │   └── favoritos-page.component.ts  # Página "Mi lista"
 │   └── loading/
 │       └── skeleton.component.ts
 ├── services/                  # Servicios HTTP (movie.service, genero.service)

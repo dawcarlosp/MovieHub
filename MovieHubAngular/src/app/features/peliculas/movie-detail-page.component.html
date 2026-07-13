@@ -38,14 +38,11 @@
       </p>
       <p class="detail__description">{{ movie.descripcion }}</p>
       <div class="detail__actions">
-        <button mat-raised-button color="primary" (click)="openTrailer()" matTooltip="Añadir enlace al tráiler">
+        <button mat-stroked-button (click)="openTrailer()" matTooltip="Añadir enlace al tráiler">
           <mat-icon>play_arrow</mat-icon>
           Reproducir
         </button>
-        <button mat-stroked-button matTooltip="Añadir a mi lista">
-          <mat-icon>add</mat-icon>
-          Mi lista
-        </button>
+        <app-favorito-button [peliculaId]="movie.id" />
       </div>
     </div>
   </div>

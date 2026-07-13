@@ -21,7 +21,7 @@
           </button>
         }
       </mat-menu>
-      <a mat-button class="navbar__link">Mi lista</a>
+        <a mat-button class="navbar__link" (click)="favoritosClick.emit()">Mi lista</a>
     </nav>
   </div>
   <div class="navbar__right">
@@ -82,7 +82,7 @@
 
   <mat-divider class="hamburger__divider" />
 
-  <button mat-menu-item>
+    <button mat-menu-item (click)="favoritosClick.emit()">
     <mat-icon>favorite_border</mat-icon>
     <span>Mi lista</span>
   </button>
