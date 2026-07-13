@@ -8,6 +8,7 @@
               box-shadow 0.35s ease;
   overflow: hidden;
   border: none !important;
+  position: relative;
 
   &:hover {
     transform: scale(1.15);
@@ -20,10 +21,11 @@
     }
   }
 
-  &__poster-wrap {
-    position: relative;
-    overflow: visible;
-    border-radius: var(--mh-radius) var(--mh-radius) 0 0;
+  &__poster {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    display: block;
   }
 
   &__fav {
@@ -67,5 +69,15 @@
   &__rating {
     color: #46d369;
     font-weight: 700;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: auto;
+
+    &:hover {
+      transform: scale(1.05);
+    }
   }
 }

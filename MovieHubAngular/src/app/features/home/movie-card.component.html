@@ -1,9 +1,7 @@
 @let movie = this.movie();
 <mat-card class="card" appearance="outlined" (click)="movieClick.emit(movie)">
-  <div class="card__poster-wrap">
-    <img class="card__poster" [src]="movie.imagen" [alt]="movie.titulo" loading="lazy">
-    <app-favorito-button class="card__fav" [peliculaId]="movie.id" />
-  </div>
+  <img mat-card-image class="card__poster" [src]="movie.imagen" [alt]="movie.titulo" loading="lazy">
+  <app-favorito-button class="card__fav" [peliculaId]="movie.id" />
   <mat-card-content class="card__overlay">
     <p class="card__title">{{ movie.titulo }}</p>
     <div class="card__tags">
