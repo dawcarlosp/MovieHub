@@ -28,6 +28,10 @@
     }
 
     @if (!loading() && !error()) {
+      @if (activeView() === 'favoritos') {
+        <app-favoritos-page />
+      }
+
       @if (activeView() === 'detalle'; as detailView) {
         @if (selectedMovie(); as movie) {
           <app-movie-detail-page [movie]="movie" (back)="onBackFromDetail()" />
