@@ -13,12 +13,15 @@ Plataforma web para gestionar un catálogo de películas: exploración, valoraci
 - **Paginación:** Endpoint `GET /api/peliculas` con `?page=&pageSize=` y DTO genérico `PaginadosDto<T>`
 - **Swagger:** Documentación interactiva disponible en `/swagger`
 - **CORS:** Permitido para `http://localhost:4200`
+- **Frontend:** UI Netflix-style completa con catálogo agrupado por género, héroe con Ken Burns, skeleton loading, diseño responsive
+- **Angular Material:** Tema M3 custom oscuro con paleta roja Netflix, componentes: mat-toolbar, mat-card, mat-menu, mat-chip, mat-icon, mat-divider
+- **Environment:** Archivos `environment.ts` / `environment.prod.ts` con `apiUrlBase` centralizado y `fileReplacements`
+- **Arquitectura frontend:** Componentes standalone con lazy loading (`core/`, `shared/`, `features/`), `ChangeDetectionStrategy.OnPush`, señales, pipes puros, interceptor HTTP global
+- **Auth JWT:** Paquetes instalados en backend y endpoints `/register`, `/login`, `/me` operativos (pendiente activar `[Authorize]`)
 
 ### Pendiente
-- **Autenticación JWT:** Paquetes instalados pero código comentado en `Program.cs`
-- **Tests:** Proyecto de tests no creado
-- **Pipeline CI:** `.github/workflows/` vacío
-- **Frontend:** Proyecto Angular scaffolded pero sin componentes de negocio
+- **Autenticación JWT:** Activar `AddAuthentication` / `AddJwtBearer` en `Program.cs` + protección con `[Authorize]`
+- **Tests:** Proyecto de tests no creado (backend xUnit + frontend Vitest)
 - **Funcionalidades extra:** Valoraciones, Favoritos, Estadísticas, Búsqueda/Filtros — pendientes de implementar
 
 > Hasta que la pipeline y los tests estén operativos, cada Pull Request debe probarse manualmente antes de fusionar.
@@ -35,21 +38,27 @@ MovieHub permite:
 
 ## Tecnologías
 
-- **Frontend:** Angular 22 (standalone), SCSS, Vitest
+- **Frontend:** Angular 22 (standalone), Angular Material M3, SCSS, Vitest
 - **Backend:** ASP.NET Core Web API (.NET 10), Entity Framework Core 10, Mapster, FluentValidation
 - **Base de datos:** SQL Server, Identity (ASP.NET Core Identity)
-- **Autenticación:** JWT (pendiente de activar)
+- **Autenticación:** JWT (pendiente de activar `[Authorize]`)
 - **Documentación API:** Swagger / Swashbuckle
-- **CI/CD:** Git, GitHub, GitHub Actions (pendiente de configurar)
+- **CI/CD:** Git, GitHub, SonarCloud (análisis de código), GitHub Actions
 
 ## Estructura del repositorio
 
 ```
 MovieHub/
 ├── MovieHubAPI/          # Backend - ASP.NET Core Web API
-├── MovieHubAngular/      # Frontend - Angular
+├── MovieHubAngular/      # Frontend - Angular (core/, shared/, features/)
+│   └── src/
+│       ├── environments/ # environment.ts + .prod.ts
+│       └── app/
+│           ├── core/     # Interceptors, layout, servicios singleton
+│           ├── shared/   # Pipes, utilidades, constantes, tipos
+│           └── features/ # home/, genero/, loading/
 ├── docs/                 # Guías por rol
-├── .github/workflows/    # CI/CD (pendiente)
+├── .github/workflows/    # CI SonarCloud
 ├── README.md
 └── CONTRIBUTING.md
 ```
