@@ -81,7 +81,31 @@ body {
   color: var(--mh-text);
 }
 
-// Menú de géneros en navbar (panel global porque mat-menu se renderiza fuera del componente)
+// Menú hamburguesa (panel global — se renderiza fuera del componente)
+.hamburger-menu {
+  --mat-menu-container-color: var(--mh-surface);
+  --mat-menu-item-label-text-color: var(--mh-text);
+  --mat-menu-item-icon-color: var(--mh-text-muted);
+  --mat-menu-item-hover-state-layer-color: rgba(229, 9, 20, 0.12);
+
+  min-width: 220px;
+
+  .mat-mdc-menu-item {
+    font-size: 0.9rem;
+    min-height: 44px;
+    gap: 0.75rem;
+
+    &:hover {
+      color: var(--mh-text);
+    }
+  }
+
+  .mat-icon {
+    margin-right: 0;
+  }
+}
+
+// Menú de géneros en navbar y submenú del hamburguesa (panel global)
 .genre-menu {
   --mat-menu-container-color: var(--mh-surface);
   --mat-menu-item-label-text-color: var(--mh-text-muted);

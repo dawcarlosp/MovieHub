@@ -87,6 +87,11 @@
       height: 28px;
     }
   }
+
+  // Hamburguesa — oculta en desktop, visible en móvil
+  &__hamburger {
+    display: none;
+  }
 }
 
 // ========== ESTADOS DE CARGA / ERROR ==========
@@ -502,6 +507,20 @@
     &__chips {
       display: none;
     }
+  }
+
+  // Hamburguesa visible en móvil
+  .navbar__hamburger {
+    display: inline-flex;
+  }
+
+  // Flecha de submenú en ítems del hamburger
+  .menu-arrow {
+    margin-left: auto;
+    font-size: 1.2rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    opacity: 0.6;
   }
 
   // Cards en móvil — grid de 2 columnas en vez de scroll horizontal
