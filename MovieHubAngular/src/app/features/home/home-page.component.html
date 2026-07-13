@@ -1,5 +1,5 @@
 @if (heroMovie(); as movie) {
-  <app-hero-section [movie]="movie" />
+  <app-hero-section [movie]="movie" (trailerClick)="trailerClick.emit()" (infoClick)="infoClick.emit()" />
 }
 
 <main class="rows">

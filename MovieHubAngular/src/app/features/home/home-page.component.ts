@@ -16,6 +16,8 @@ export class HomePageComponent {
   readonly heroMovie = input.required<Movie | null>();
   readonly rows = input.required<MovieRow[]>();
   readonly movieClick = output<Movie>();
+  readonly trailerClick = output<void>();
+  readonly infoClick = output<void>();
 
   protected readonly trackByRowTitle = trackByRowTitle;
 }
