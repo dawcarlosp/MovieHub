@@ -6,7 +6,7 @@
   cursor: pointer;
   transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
               box-shadow 0.35s ease;
-  overflow: hidden;
+  overflow: visible;
   border: none !important;
 
   &:hover {
@@ -20,11 +20,17 @@
     }
   }
 
-  &__poster {
-    width: 100%;
-    aspect-ratio: 2 / 3;
-    object-fit: cover;
-    display: block;
+  &__poster-wrap {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--mh-radius) var(--mh-radius) 0 0;
+  }
+
+  &__fav {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    z-index: 2;
   }
 
   &__overlay {
