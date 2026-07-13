@@ -5,8 +5,25 @@
     <div class="navbar__left">
       <span class="navbar__logo">MOVIE<span class="navbar__logo--accent">HUB</span></span>
       <nav class="navbar__links">
-        <a mat-button class="navbar__link navbar__link--active">Inicio</a>
-        <a mat-button class="navbar__link">Películas</a>
+        <a mat-button class="navbar__link"
+           [class.navbar__link--active]="activeView() === 'home'"
+           (click)="goHome()">
+          Inicio
+        </a>
+        <button mat-button
+                class="navbar__link"
+                [class.navbar__link--active]="activeView() === 'genero'"
+                [matMenuTriggerFor]="menuPeliculas">
+          Películas
+          <mat-icon class="navbar__chevron">expand_more</mat-icon>
+        </button>
+        <mat-menu #menuPeliculas="matMenu" class="genre-menu">
+          @for (genero of generos(); track trackByGeneroId($index, genero)) {
+            <button mat-menu-item (click)="selectGenero(genero)">
+              <span>{{ genero.nombre }}</span>
+            </button>
+          }
+        </mat-menu>
         <a mat-button class="navbar__link">Mi lista</a>
       </nav>
     </div>
@@ -64,7 +81,7 @@
   @if (!loading() && !error()) {
 
     <!-- ============ HERO ============ -->
-    @if (heroMovie(); as movie) {
+    @if (activeView() === 'home' && heroMovie(); as movie) {
       <section class="hero" [style.--hero-image]="'url(' + movie.imagen + ')'">
         <div class="hero__scrim"></div>
         <div class="hero__content">
@@ -93,6 +110,16 @@
           </div>
         </div>
       </section>
+    }
+
+    <!-- ============ BANNER DE GÉNERO ============ -->
+    @if (activeView() === 'genero'; as genreView) {
+      @if (selectedGenero(); as genero) {
+        <section class="genre-banner">
+          <h1 class="genre-banner__title">{{ genero.nombre }}</h1>
+          <p class="genre-banner__subtitle">Películas de {{ genero.nombre }}</p>
+        </section>
+      }
     }
 
     <!-- ============ FILAS POR GÉNERO ============ -->

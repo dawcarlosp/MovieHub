@@ -80,3 +80,24 @@ body {
   background: var(--mh-red);
   color: var(--mh-text);
 }
+
+// Menú de géneros en navbar (panel global porque mat-menu se renderiza fuera del componente)
+.genre-menu {
+  --mat-menu-container-color: var(--mh-surface);
+  --mat-menu-item-label-text-color: var(--mh-text-muted);
+  --mat-menu-item-hover-state-layer-color: rgba(229, 9, 20, 0.12);
+
+  .mat-mdc-menu-item {
+    font-size: 0.85rem;
+    min-height: 36px;
+
+    &:hover {
+      color: var(--mh-text);
+    }
+  }
+}
+
+// Chevron rotado cuando el menú está abierto
+button[matMenuTriggerFor][aria-expanded="true"] .navbar__chevron {
+  transform: rotate(180deg);
+}

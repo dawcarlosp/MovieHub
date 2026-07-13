@@ -61,6 +61,18 @@
     }
   }
 
+  &__chevron {
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin-left: 0.1rem;
+    transition: transform 0.2s ease;
+  }
+
+  button[matMenuTriggerFor][aria-expanded="true"] &__chevron {
+    transform: rotate(180deg);
+  }
+
   &__right {
     display: flex;
     align-items: center;
@@ -199,6 +211,24 @@
     color: var(--mh-text) !important;
     border-color: rgba(255, 255, 255, 0.4) !important;
     padding: 0.5rem 1.5rem !important;
+  }
+}
+
+// ========== BANNER DE GÉNERO ==========
+.genre-banner {
+  padding: calc(var(--mh-nav-height) + 3rem) 3rem 1.5rem;
+
+  &__title {
+    font-family: var(--mh-font-display);
+    font-size: 2.5rem;
+    letter-spacing: 0.02em;
+    margin: 0 0 0.25rem;
+  }
+
+  &__subtitle {
+    color: var(--mh-text-muted);
+    font-size: 1rem;
+    margin: 0;
   }
 }
 
