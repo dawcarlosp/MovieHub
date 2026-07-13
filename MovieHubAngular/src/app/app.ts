@@ -50,6 +50,7 @@ export class App implements OnInit {
   ngOnInit(): void {
     if (!this.auth.isLoggedIn()) {
       this.showLogin.set(true);
+      return;
     }
     this.loadGeneros();
     this.loadMovies();
@@ -57,6 +58,8 @@ export class App implements OnInit {
 
   onLoggedIn(): void {
     this.showLogin.set(false);
+    this.error.set(null);
+    this.loading.set(true);
     this.goHome();
     this.loadGeneros();
     this.loadMovies();
@@ -67,9 +70,12 @@ export class App implements OnInit {
   }
 
   onRegisterClick(): void {
-    this.dialog.open(RegisterDialogComponent, {
+    const ref = this.dialog.open(RegisterDialogComponent, {
       width: '420px',
       disableClose: true
+    });
+    ref.afterClosed().subscribe((result) => {
+      if (result) this.onLoggedIn();
     });
   }
 
