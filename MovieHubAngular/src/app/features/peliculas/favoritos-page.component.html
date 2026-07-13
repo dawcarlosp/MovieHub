@@ -2,26 +2,28 @@
   <h1 class="fav-page__title">Mi lista</h1>
   <p class="fav-page__subtitle">Películas que has marcado como favoritas</p>
 
-  @if (favoritos.length === 0) {
+  @let lista = favoritos();
+
+  @if (lista.length === 0) {
     <div class="fav-page__empty">
       <mat-icon>favorite_border</mat-icon>
       <p>No tienes películas favoritas aún.</p>
       <p class="fav-page__hint">Explora el catálogo y añade películas pulsando el corazón.</p>
     </div>
+  } @else {
+    <div class="fav-page__grid">
+      @for (fav of lista; track fav.peliculaId) {
+        <mat-card class="fav-card" appearance="outlined">
+          <div class="fav-card__poster-wrap">
+            <img class="fav-card__poster" [src]="fav.imagen" [alt]="fav.titulo" loading="lazy" />
+            <app-favorito-button class="fav-card__fav" [peliculaId]="fav.peliculaId" />
+          </div>
+          <mat-card-content class="fav-card__info">
+            <p class="fav-card__title">{{ fav.titulo }}</p>
+            <app-star-rating [puntuacion]="fav.puntuacionMedia" [readonly]="true" size="small" />
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
   }
-
-  <div class="fav-page__grid">
-    @for (fav of favoritos; track fav.peliculaId) {
-      <mat-card class="fav-card" appearance="outlined">
-        <div class="fav-card__poster-wrap">
-          <img class="fav-card__poster" [src]="fav.imagen" [alt]="fav.titulo" loading="lazy" />
-          <app-favorito-button class="fav-card__fav" [peliculaId]="fav.peliculaId" />
-        </div>
-        <mat-card-content class="fav-card__info">
-          <p class="fav-card__title">{{ fav.titulo }}</p>
-          <app-star-rating [puntuacion]="fav.puntuacionMedia" [readonly]="true" size="small" />
-        </mat-card-content>
-      </mat-card>
-    }
-  </div>
 </section>
