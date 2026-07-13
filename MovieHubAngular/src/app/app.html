@@ -27,11 +27,21 @@
     }
 
     @if (!loading() && !error()) {
-      @if (activeView() === 'home') {
-        <app-home-page [heroMovie]="state.heroMovie()" [rows]="state.rows()" />
+      @if (activeView() === 'detalle'; as detailView) {
+        @if (selectedMovie(); as movie) {
+          <app-movie-detail-page [movie]="movie" (back)="onBackFromDetail()" />
+        }
       }
 
-      @if (activeView() === 'genero'; as genreView) {
+      @if (activeView() === 'home') {
+        <app-home-page
+          [heroMovie]="state.heroMovie()"
+          [rows]="state.rows()"
+          (movieClick)="showMovieDetail($event)"
+        />
+      }
+
+      @if (activeView() === 'genero') {
         @if (selectedGenero(); as genero) {
           <app-genero-page [genero]="genero" [rows]="state.filterByGenre(genero.nombre)" />
         }

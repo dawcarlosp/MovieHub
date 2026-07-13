@@ -1,5 +1,5 @@
 @let movie = this.movie();
-<mat-card class="card" appearance="outlined" (click)="movieClick.emit(movie())">
+<mat-card class="card" appearance="outlined" (click)="movieClick.emit(movie)">
   <img mat-card-image class="card__poster" [src]="movie.imagen" [alt]="movie.titulo" loading="lazy">
   <mat-card-content class="card__overlay">
     <p class="card__title">{{ movie.titulo }}</p>
