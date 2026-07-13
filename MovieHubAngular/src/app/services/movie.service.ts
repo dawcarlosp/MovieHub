@@ -1,10 +1,10 @@
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { Observable, forkJoin, map, switchMap } from 'rxjs';
 
 import { Movie, PaginatedResponse } from '../models/movie.model';
+import { environment } from '../../environments/environment';
 
-const API_BASE_URL = 'https://localhost:7154/api/Peliculas';
 const MAX_PAGE_SIZE = 50;
 const CATALOG_PAGES = 2;
 
@@ -12,10 +12,11 @@ const CATALOG_PAGES = 2;
   providedIn: 'root'
 })
 export class MovieService {
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
+  private readonly baseUrl = `${environment.apiUrlBase}/Peliculas`;
 
   getPage(page: number, pageSize: number = MAX_PAGE_SIZE): Observable<PaginatedResponse<Movie>> {
-    return this.http.get<PaginatedResponse<Movie>>(API_BASE_URL, {
+    return this.http.get<PaginatedResponse<Movie>>(this.baseUrl, {
       params: { page, pageSize }
     });
   }

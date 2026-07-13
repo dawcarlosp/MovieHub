@@ -3,16 +3,16 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Genero } from '../models/genero.model';
-
-const API_BASE_URL = 'https://localhost:7154/api';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GeneroService {
   private readonly http = inject(HttpClient);
+  private readonly baseUrl = `${environment.apiUrlBase}/Generos`;
 
   getAll(): Observable<Genero[]> {
-    return this.http.get<Genero[]>(`${API_BASE_URL}/Generos`);
+    return this.http.get<Genero[]>(this.baseUrl);
   }
 }
