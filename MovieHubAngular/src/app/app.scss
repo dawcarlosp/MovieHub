@@ -15,13 +15,8 @@
   display: flex;
   align-items: center;
   padding: 0 3rem;
-  background: transparent;
-  transition: background var(--mh-transition), box-shadow var(--mh-transition);
-
-  &--solid {
-    background: rgba(20, 20, 20, 0.98);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
-  }
+  background: rgba(20, 20, 20, 0.98);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
 
   &__left {
     display: flex;
@@ -117,8 +112,8 @@
   display: flex;
   align-items: flex-end;
   background-image:
-    linear-gradient(to right, rgba(20, 20, 20, 0.85) 0%, rgba(20, 20, 20, 0.3) 50%, transparent 75%),
-    linear-gradient(to top, rgba(20, 20, 20, 1) 0%, transparent 40%),
+    linear-gradient(to right, rgba(20, 20, 20, 0.92) 0%, rgba(20, 20, 20, 0.5) 40%, transparent 60%),
+    linear-gradient(to top, var(--mh-bg) 0%, transparent 30%),
     var(--hero-image);
   background-size: cover;
   background-position: center 20%;
@@ -133,7 +128,7 @@
   &__content {
     position: relative;
     z-index: 1;
-    max-width: 660px;
+    max-width: 38%;
     padding: 0 3rem 5rem;
     animation: hero-fade-in 1s ease-out;
   }
@@ -179,9 +174,13 @@
   &__description {
     color: var(--mh-text);
     font-size: 1rem;
-    line-height: 1.6;
+    line-height: 1.5;
     margin-bottom: 1.5rem;
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
     animation: hero-slide-up 0.8s ease-out 0.4s both;
   }
 
@@ -330,7 +329,7 @@
   }
 
   &__hero-content {
-    max-width: 660px;
+    max-width: 38%;
     width: 100%;
     display: flex;
     flex-direction: column;
