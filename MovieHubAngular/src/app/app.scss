@@ -172,6 +172,10 @@
     color: #46d369;
   }
 
+  &__chips {
+    display: inline-flex;
+  }
+
   &__description {
     color: var(--mh-text);
     font-size: 1rem;
@@ -402,7 +406,7 @@
 
 // ========== FOOTER ==========
 .footer {
-  padding: 3rem 3rem 0;
+  padding: 1.5rem 3rem 0;
   color: var(--mh-text-dim);
   font-size: 0.8rem;
   text-align: center;

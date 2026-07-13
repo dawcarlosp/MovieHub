@@ -74,7 +74,11 @@
             <span class="hero__match">{{ (movie.puntuacionMedia / 5 * 100) | number: '1.0-0' }}% para ti</span>
             <span>{{ movie.anioEstreno }}</span>
             <span>{{ movie.duracion }} min</span>
-            <span>{{ movie.generos.join(' · ') }}</span>
+            <mat-chip-set class="hero__chips">
+              @for (genero of movie.generos; track genero) {
+                <mat-chip>{{ genero }}</mat-chip>
+              }
+            </mat-chip-set>
           </div>
           <p class="hero__description">{{ movie.descripcion }}</p>
           <div class="hero__actions">
@@ -104,7 +108,9 @@
                   <p class="card__title">{{ movie.titulo }}</p>
                   <div class="card__tags">
                     <span class="card__rating">{{ movie.puntuacionMedia | number: '1.1-1' }}</span>
-                    <span>{{ movie.generos[0] }}</span>
+                    <mat-chip-set>
+                      <mat-chip>{{ movie.generos[0] }}</mat-chip>
+                    </mat-chip-set>
                     <span>{{ movie.anioEstreno }}</span>
                   </div>
                 </mat-card-content>
@@ -118,6 +124,7 @@
   }
 
   <!-- ============ FOOTER ============ -->
+  <mat-divider />
   <footer class="footer">
     <p>MovieHub · proyecto de práctica, no afiliado a ninguna plataforma comercial.</p>
   </footer>
