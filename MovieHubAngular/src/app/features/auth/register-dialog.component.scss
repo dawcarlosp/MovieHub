@@ -1,3 +1,6 @@
+// ==========================================
+// BANNERS Y DIÁLOGOS (Estilos originales)
+// ==========================================
 .error-banner {
   display: flex;
   align-items: center;
@@ -23,18 +26,6 @@
   margin-bottom: 0.5rem;
 }
 
-::ng-deep .auth-field {
-  .mat-mdc-text-field-wrapper {
-    overflow: visible;
-  }
-  .mdc-notched-outline__notch {
-    border-right: none;
-  }
-  .mdc-floating-label--float-above {
-    transform: translateY(-98%) scale(0.75);
-  }
-}
-
 [mat-dialog-content] {
   min-height: 320px;
 }
@@ -49,4 +40,29 @@
 [mat-dialog-actions] {
   padding-top: 0.5rem;
   gap: 0.5rem;
+}
+
+// ==========================================
+// SOLUCIÓN AL RECORTE DEL INPUT (Angular MDC)
+// ==========================================
+::ng-deep .auth-field {
+  // Evitamos que el componente padre corte la etiqueta flotante hacia arriba
+  &.mat-mdc-form-field {
+    overflow: visible !important;
+  }
+
+  .mat-mdc-text-field-wrapper {
+    overflow: visible !important;
+  }
+
+  // Permitimos que la muesca (notch) donde se aloja el texto respire y muestre el texto sobrante
+  .mdc-notched-outline__notch {
+    border-right: none;
+    overflow: visible !important; 
+  }
+
+  // Centramos la etiqueta flotante en el borde del input usando px en lugar de porcentajes negativos agresivos
+  .mdc-floating-label--float-above {
+    transform: translateY(-31.75px) scale(0.75) !important;
+  }
 }
