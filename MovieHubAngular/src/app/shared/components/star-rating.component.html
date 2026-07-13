@@ -1,0 +1,16 @@
+@let max = 5;
+@let current = Math.round(puntuacion());
+<div class="stars" [class.stars--small]="size() === 'small'" [class.stars--readonly]="readonly()" role="radiogroup" aria-label="Valoración">
+  @for (star of [1,2,3,4,5]; track star) {
+    <button
+      class="star"
+      [class.star--filled]="star <= current"
+      [class.star--hoverable]="!readonly()"
+      (click)="!readonly() && rate.emit(star)"
+      [attr.aria-label]="star + ' estrellas'"
+      type="button"
+    >
+      <mat-icon>{{ star <= current ? 'star' : 'star_border' }}</mat-icon>
+    </button>
+  }
+</div>
