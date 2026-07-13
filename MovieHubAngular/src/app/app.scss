@@ -412,7 +412,7 @@
 }
 
 // ========== RESPONSIVE ==========
-@media (max-width: 720px) {
+@media (max-width: 768px) {
   .navbar,
   .hero__content,
   .row__title,
@@ -422,12 +422,54 @@
     padding-right: 1.25rem;
   }
 
-  .card {
-    width: 140px;
+  .navbar__links {
+    display: none;
   }
 
+  // Hero en móvil — contenido a ancho completo, título más pequeño
   .hero {
-    height: 70vh;
-    min-height: 420px;
+    height: 60vh;
+    min-height: 380px;
+    background-position: center 30%;
+    background-image:
+      linear-gradient(to right, rgba(20, 20, 20, 0.9) 0%, rgba(20, 20, 20, 0.6) 100%),
+      linear-gradient(to top, var(--mh-bg) 0%, transparent 40%),
+      var(--hero-image);
+
+    &__content {
+      max-width: 100%;
+      padding: 0 1.25rem 3rem;
+    }
+
+    &__title {
+      font-size: clamp(1.8rem, 10vw, 2.8rem);
+      margin-bottom: 0.5rem;
+    }
+
+    &__meta {
+      font-size: 0.8rem;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    &__description {
+      -webkit-line-clamp: 2;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    &__actions {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    &__btn-play,
+    &__btn-info {
+      width: 100%;
+    }
+
+    &__chips {
+      display: none;
+    }
   }
 }
