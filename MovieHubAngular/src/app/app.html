@@ -1,7 +1,7 @@
 <div class="app-shell">
 
   <!-- ============ NAVBAR (MAT-TOOLBAR) ============ -->
-  <mat-toolbar class="navbar" [class.navbar--solid]="scrolled()">
+  <mat-toolbar class="navbar navbar--solid">
     <div class="navbar__left">
       <span class="navbar__logo">MOVIE<span class="navbar__logo--accent">HUB</span></span>
       <nav class="navbar__links">
@@ -80,7 +80,7 @@
               }
             </mat-chip-set>
           </div>
-          <p class="hero__description">{{ movie.descripcion }}</p>
+          <p class="hero__description">{{ truncateSynopsis(movie.descripcion) }}</p>
           <div class="hero__actions">
             <button mat-raised-button color="primary" class="hero__btn-play" matTooltip="Reproducir tráiler">
               <mat-icon>play_arrow</mat-icon>
