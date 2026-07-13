@@ -10,6 +10,7 @@ using MovieHubAPI.Middleware;
 using MovieHubAPI.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
+using System.Collections.Generic;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,10 @@ builder.Services.AddSwaggerGen(c =>
         In = Microsoft.OpenApi.ParameterLocation.Header,
         Description = "Pega aquí el token JWT obtenido en POST /api/Usuarios/login"
     });
-    c.OperationFilter<MovieHubAPI.Filters.AuthorizeCheckOperationFilter>();
+    c.AddSecurityRequirement(_ => new Microsoft.OpenApi.OpenApiSecurityRequirement
+    {
+        { new Microsoft.OpenApi.OpenApiSecuritySchemeReference("Bearer"), new List<string>() }
+    });
 });
 builder.Services.AddCors(options =>
 {
