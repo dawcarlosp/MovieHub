@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MovieHubAPI.ApiDefinitions;
 using MovieHubAPI.DTOs.Genero;
 using MovieHubAPI.Interfaces;
@@ -8,6 +9,7 @@ namespace MovieHubAPI.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Tags("Géneros")]
+    [Authorize]
     public class GenerosController : ControllerBase, IGeneroApi
     {
         private readonly IGeneroService _generoService;
@@ -20,6 +22,7 @@ namespace MovieHubAPI.Controllers
         [EndpointSummary("Listar todos los géneros")]
         [EndpointDescription("Devuelve la lista completa de géneros disponibles.")]
         [ProducesResponseType<List<GeneroDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<GeneroDto>>> GetAll()
         {
             var generos = await _generoService.GetAllAsync();
@@ -30,6 +33,7 @@ namespace MovieHubAPI.Controllers
         [EndpointSummary("Obtener género por ID")]
         [ProducesResponseType<GeneroDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<GeneroDto>> GetById(int id)
         {
             var genero = await _generoService.GetByIdAsync(id);
@@ -41,6 +45,7 @@ namespace MovieHubAPI.Controllers
         [EndpointSummary("Crear nuevo género")]
         [ProducesResponseType<GeneroDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<GeneroDto>> Create(CreateGeneroDto dto)
         {
             var genero = await _generoService.CreateAsync(dto);
@@ -51,6 +56,7 @@ namespace MovieHubAPI.Controllers
         [EndpointSummary("Actualizar género existente")]
         [ProducesResponseType<GeneroDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<GeneroDto>> Update(int id, UpdateGeneroDto dto)
         {
             var genero = await _generoService.UpdateAsync(id, dto);
@@ -62,6 +68,7 @@ namespace MovieHubAPI.Controllers
         [EndpointSummary("Eliminar género")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Delete(int id)
         {
             var deleted = await _generoService.DeleteAsync(id);

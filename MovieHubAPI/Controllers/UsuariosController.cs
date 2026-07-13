@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieHubAPI.DTOs.Usuario;
 using MovieHubAPI.Interfaces;
@@ -46,34 +48,43 @@ namespace MovieHubAPI.Controllers
             return Ok(result);
         }
 
+        [Authorize]
         [HttpGet("me")]
         [EndpointSummary("Obtener perfil del usuario")]
         [ProducesResponseType<UserProfileDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UserProfileDto>> GetMe([FromQuery] long userId)
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<UserProfileDto>> GetMe()
         {
+            var userId = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _usuarioService.GetProfileAsync(userId);
             if (result is null) return NotFound();
             return Ok(result);
         }
 
+        [Authorize]
         [HttpPut("me")]
         [EndpointSummary("Actualizar perfil del usuario")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateMe([FromQuery] long userId, UpdateProfileDto dto)
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> UpdateMe(UpdateProfileDto dto)
         {
+            var userId = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _usuarioService.UpdateProfileAsync(userId, dto);
             if (!result) return NotFound();
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("me")]
         [EndpointSummary("Eliminar cuenta del usuario")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteMe([FromQuery] long userId)
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> DeleteMe()
         {
+            var userId = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _usuarioService.DeleteProfileAsync(userId);
             if (!result) return NotFound();
             return NoContent();
