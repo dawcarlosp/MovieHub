@@ -29,13 +29,44 @@ namespace MovieHubAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<PaginadosDto<PeliculaDto>>> GetAll(
               [Description("Número de página (empieza en 1)")][FromQuery] int page = 1,
-        [Description("Elementos por página (máx 50)")][FromQuery] int pageSize = 10)
+        [Description("Elementos por página (máx 50)")][FromQuery] int pageSize = 10,
+        [Description("Filtrar por título")][FromQuery] string? titulo = null,
+        [Description("Filtrar por género")][FromQuery] int? generoId = null,
+        [Description("Ordenar por (puntuacion, anio)")][FromQuery] string? orden = null)
         {
             if (pageSize > 50) pageSize = 50;
             if (page < 1) page = 1;
-            var resultado = await _peliculaService.GetAllPaginadoAsync(page, pageSize);
+            var resultado = await _peliculaService.GetAllPaginadoAsync(page, pageSize, titulo, generoId, orden);
             return Ok(resultado);
         }
+
+        [HttpGet("mejor-valoradas")]
+        [EndpointSummary("Top 10 mejor valoradas")]
+        [ProducesResponseType<List<PeliculaDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<List<PeliculaDto>>> GetMejorValoradas()
+        {
+            return Ok(await _peliculaService.GetMejorValoradasAsync());
+        }
+
+        [HttpGet("mas-recientes")]
+        [EndpointSummary("Top 10 más recientes")]
+        [ProducesResponseType<List<PeliculaDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<List<PeliculaDto>>> GetMasRecientes()
+        {
+            return Ok(await _peliculaService.GetMasRecientesAsync());
+        }
+
+        [HttpGet("estadisticas")]
+        [EndpointSummary("Estadísticas generales")]
+        [ProducesResponseType<EstadisticasDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<EstadisticasDto>> GetEstadisticas()
+        {
+            return Ok(await _peliculaService.GetEstadisticasAsync());
+        }
+
         [HttpGet("{id}")]
         [EndpointSummary("Obtener película por ID")]
         [ProducesResponseType<PeliculaDto>(StatusCodes.Status200OK)]
@@ -47,6 +78,7 @@ namespace MovieHubAPI.Controllers
             if (pelicula is null) return NotFound();
             return Ok(pelicula);
         }
+
         [HttpPost]
         [EndpointSummary("Crear nueva película")]
         [ProducesResponseType<PeliculaDto>(StatusCodes.Status201Created)]
