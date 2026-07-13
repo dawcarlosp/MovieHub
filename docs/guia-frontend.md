@@ -53,6 +53,9 @@ src/app/
 │   ├── auth/
 │   │   ├── login-page.component.ts
 │   │   └── register-dialog.component.ts
+│   ├── peliculas/
+│   │   ├── movie-detail-page.component.ts
+│   │   └── trailer-dialog.component.ts
 │   └── loading/
 │       └── skeleton.component.ts
 ├── services/                  # Servicios HTTP (movie.service, genero.service)
