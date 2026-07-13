@@ -43,6 +43,7 @@ export class App implements OnInit {
   protected readonly generos = signal<Genero[]>([]);
   protected readonly selectedGenero = signal<Genero | null>(null);
   protected readonly activeView = signal<ActiveView>('home');
+  protected readonly peliculasExpanded = signal(false);
 
   private allMovies: Movie[] = [];
 
@@ -76,6 +77,7 @@ export class App implements OnInit {
   selectGenero(genero: Genero): void {
     this.selectedGenero.set(genero);
     this.activeView.set('genero');
+    this.peliculasExpanded.set(false);
     const generoRows = this.buildRowsByGenre(this.allMovies).filter(
       (r) => r.title === genero.nombre
     );
@@ -85,8 +87,13 @@ export class App implements OnInit {
   goHome(): void {
     this.selectedGenero.set(null);
     this.activeView.set('home');
+    this.peliculasExpanded.set(false);
     this.heroMovie.set(this.pickHeroMovie(this.allMovies));
     this.rows.set(this.buildRowsByGenre(this.allMovies));
+  }
+
+  togglePeliculas(): void {
+    this.peliculasExpanded.update((v) => !v);
   }
 
   truncateSynopsis(text: string | null): string {
