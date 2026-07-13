@@ -514,6 +514,19 @@
     display: inline-flex;
   }
 
+  // Submenú "Películas" — ocultar flecha nativa de Material, usar icono personalizado a la izquierda
+  .hamburger__submenu-icon {
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin-right: 0.1rem;
+    margin-left: -0.25rem;
+  }
+
+  button[matMenuTriggerFor] .mat-mdc-menu-item-submenu-trigger::after {
+    display: none;
+  }
+
   // Cards en móvil — grid de 2 columnas en vez de scroll horizontal
   .row {
     &__track {
