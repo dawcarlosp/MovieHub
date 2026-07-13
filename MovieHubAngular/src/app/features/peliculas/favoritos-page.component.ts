@@ -33,6 +33,9 @@ export class FavoritosPageComponent {
     this.favoritoService.getAll().subscribe({
       next: (favs) => {
         this.favoritos = favs;
+      },
+      error: () => {
+        console.error('Error al cargar favoritos');
       }
     });
   }
