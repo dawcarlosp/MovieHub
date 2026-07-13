@@ -65,11 +65,12 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Proyecto-academico-Copermatica_MovieHub" /o:"proyecto-academico-copermatica" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.sources="." /d:sonar.exclusions="**/node_modules/**,**/bin/**,**/obj/**,**/.vs/**"
+          # 1. Inicio del Scanner desde la raíz del repositorio
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Proyecto-academico-Copermatica_MovieHub" /o:"proyecto-academico-copermatica" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="**/node_modules/**,**/bin/**,**/obj/**,**/.vs/**"
 
-          cd MovieHubAPI
-          dotnet restore
-          dotnet build --configuration Release
-          cd ..
+          # 2. Restaurar y Compilar apuntando directamente a la solución sin cambiar de carpeta (Evita Error Causa 3)
+          dotnet restore MovieHubAPI/MovieHubAPI.slnx
+          dotnet build MovieHubAPI/MovieHubAPI.slnx --configuration Release
 
+          # 3. Cierre y envío de datos a SonarCloud ejecutado en la misma ruta raíz
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
