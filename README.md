@@ -2,6 +2,20 @@
 
 Plataforma web para gestionar un catálogo de películas: exploración, valoraciones, favoritos, búsquedas y estadísticas.
 
+## Capturas de pantalla
+
+| Inicio | Catálogo | Detalle |
+|--------|----------|---------|
+| ![Login](MovieHubAngular/src/assets/screenshots/login.png) | ![Hero](MovieHubAngular/src/assets/screenshots/home-hero.png) | ![Detalle](MovieHubAngular/src/assets/screenshots/movie-detail.png) |
+
+| Catálogo (rows) | Géneros | Favoritos |
+|-----------------|---------|-----------|
+| ![Filas](MovieHubAngular/src/assets/screenshots/home-rows.png) | ![Por género](MovieHubAngular/src/assets/screenshots/genero.png) | ![Favoritos](MovieHubAngular/src/assets/screenshots/favoritos.png) |
+
+| Móvil |
+|-------|
+| ![Móvil](MovieHubAngular/src/assets/screenshots/mobile-nav.png) |
+
 ## Estado actual del proyecto
 
 ### Implementado
