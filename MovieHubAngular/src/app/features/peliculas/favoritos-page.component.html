@@ -3,7 +3,6 @@
   <p class="fav-page__subtitle">Películas que has marcado como favoritas</p>
 
   @let lista = favoritos();
-
   @if (lista.length === 0) {
     <div class="fav-page__empty">
       <mat-icon>favorite_border</mat-icon>
@@ -13,7 +12,7 @@
   } @else {
     <div class="fav-page__grid">
       @for (fav of lista; track fav.peliculaId) {
-        <mat-card class="fav-card" appearance="outlined">
+        <mat-card class="fav-card" appearance="outlined" (click)="movieClick.emit()">
           <div class="fav-card__poster-wrap">
             <img class="fav-card__poster" [src]="fav.imagen" [alt]="fav.titulo" loading="lazy" />
             <app-favorito-button class="fav-card__fav" [peliculaId]="fav.peliculaId" />

@@ -52,7 +52,7 @@
     }
 
     @if (activeView() === 'favoritos') {
-      <app-favoritos-page />
+      <app-favoritos-page  (movieClick)="showMovieDetail($event)"/>
     }
 
     <mat-divider />
