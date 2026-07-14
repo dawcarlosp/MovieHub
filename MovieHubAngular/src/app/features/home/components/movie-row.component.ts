@@ -1,8 +1,8 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Movie, MovieRow } from '../../models/movie.model';
-import { trackByMovieId } from '../../shared/utils/track-by';
+import { Movie, MovieRow } from '../../../models/movie.model';
+import { trackByMovieId } from '../../../shared/utils/track-by';
 import { MovieCardComponent } from './movie-card.component';
 
 @Component({

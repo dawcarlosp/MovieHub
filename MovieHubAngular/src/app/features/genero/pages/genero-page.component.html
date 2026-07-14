@@ -1,0 +1,7 @@
+<app-genre-banner [nombre]="nombre()" />
+
+<main class="rows">
+  @for (row of movieState.filterByGenre(nombre()); track trackByRowTitle($index, row)) {
+    <app-movie-row [row]="row" />
+  }
+</main>

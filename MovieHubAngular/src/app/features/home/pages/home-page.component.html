@@ -1,0 +1,26 @@
+@if (loading()) {
+  <app-skeleton />
+}
+
+@if (!loading() && error()) {
+  <div class="state-screen">
+    <mat-icon class="state-screen__icon">error_outline</mat-icon>
+    <p class="state-screen__error">{{ error() }}</p>
+  </div>
+}
+
+@if (!loading() && !error()) {
+  @if (heroMovie(); as movie) {
+    <app-hero-section
+      [movie]="movie"
+      (trailerClick)="openTrailerDialog()"
+      (infoClick)="goToDetail(heroMovie()!)"
+    />
+  }
+
+  <main class="rows">
+    @for (row of rows(); track trackByRowTitle($index, row)) {
+      <app-movie-row [row]="row" (movieClick)="showMovieDetail($event)" />
+    }
+  </main>
+}

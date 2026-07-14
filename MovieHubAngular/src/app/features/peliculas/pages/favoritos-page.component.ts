@@ -1,11 +1,12 @@
-import { Component, inject, signal, input, output } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { Movie } from '../../models/movie.model';
-import { FavoritoService, Favorito } from '../../core/services/favorito.service';
-import { StarRatingComponent } from '../../shared/components/star-rating.component';
-import { FavoritoButtonComponent } from '../../shared/components/favorito-button.component';
+
+import { FavoritoService, Favorito } from '../../../core/services/favorito.service';
+import { StarRatingComponent } from '../../../shared/components/star-rating.component';
+import { FavoritoButtonComponent } from '../../../shared/components/favorito-button.component';
 
 @Component({
   selector: 'app-favoritos-page',
@@ -22,14 +23,17 @@ import { FavoritoButtonComponent } from '../../shared/components/favorito-button
 })
 export class FavoritosPageComponent {
   private readonly favoritoService = inject(FavoritoService);
-  readonly favoritos = signal<Favorito[]>([]);
+  private readonly router = inject(Router);
 
-  readonly movie = input.required<Movie>();
-  readonly movieClick = output<Movie>();
+  readonly favoritos = signal<Favorito[]>([]);
 
   constructor() {
     this.favoritoService.getAll().subscribe({
       next: (favs) => this.favoritos.set(favs ?? []),
     });
+  }
+
+  goToPelicula(peliculaId: number): void {
+    this.router.navigate(['/pelicula', peliculaId]);
   }
 }

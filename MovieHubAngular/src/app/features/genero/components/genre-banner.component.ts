@@ -1,5 +1,4 @@
 import { Component, input } from '@angular/core';
-import { Genero } from '../../models/genero.model';
 
 @Component({
   selector: 'app-genre-banner',
@@ -9,5 +8,5 @@ import { Genero } from '../../models/genero.model';
   styleUrl: './genre-banner.component.scss'
 })
 export class GenreBannerComponent {
-  readonly genero = input.required<Genero>();
+  readonly nombre = input.required<string>();
 }

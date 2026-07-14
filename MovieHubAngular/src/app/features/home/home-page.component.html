@@ -1,9 +1,0 @@
-@if (heroMovie(); as movie) {
-  <app-hero-section [movie]="movie" (trailerClick)="trailerClick.emit()" (infoClick)="infoClick.emit()" />
-}
-
-<main class="rows">
-  @for (row of rows(); track trackByRowTitle($index, row)) {
-    <app-movie-row [row]="row" (movieClick)="movieClick.emit($event)" />
-  }
-</main>

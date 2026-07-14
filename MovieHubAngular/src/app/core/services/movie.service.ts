@@ -2,8 +2,8 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, forkJoin, map, switchMap } from 'rxjs';
 
-import { Movie, PaginatedResponse } from '../models/movie.model';
-import { environment } from '../../environments/environment';
+import { Movie, PaginatedResponse } from '../../models/movie.model';
+import { environment } from '../../../environments/environment';
 
 export interface Estadisticas {
   totalPeliculas: number;

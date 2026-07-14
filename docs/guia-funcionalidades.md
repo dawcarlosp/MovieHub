@@ -38,18 +38,12 @@ Si haces las dos capas a la vez y algo falla, no sabrás si el error está en ba
 
 ## Funcionalidades concretas del proyecto
 
-### Valoraciones (1-5 estrellas) — **Backend implementado** 🟢
+### Valoraciones (1-5 estrellas) — **Completado** ✅
 
 **Modelo existente:** `ValoracionModel` con campos `UsuarioId`, `PeliculaId`, `Puntuacion` (1-5) y `Fecha`.
 
-**Backend (implementado):**
-
+**Backend:**
 ```csharp
-// DTOs
-public record CreateValoracionDto(int PeliculaId, int Puntuacion);
-public record ValoracionDto(int Id, string UsuarioEmail, int Puntuacion, DateTime Fecha);
-
-// Endpoints en ValoracionesController (requieren auth)
 POST   /api/valoraciones           // crear valoración
 PUT    /api/valoraciones/{id}      // modificar valoración
 DELETE /api/valoraciones/{id}      // eliminar valoración
@@ -58,14 +52,11 @@ GET    /api/valoraciones/pelicula/{peliculaId}  // obtener valoraciones de una p
 
 > La `PuntuacionMedia` de la película se recalcula automáticamente tras cada valoración.
 
-**Frontend (pendiente):**
-
-```
-Componente estrella-valoracion (reutilizable)
-  → Servicio consume endpoints de valoraciones
-  → Al hacer clic en estrella → POST /api/valoraciones
-  → Se refresca puntuacionMedia
-```
+**Frontend:**
+- `StarRatingComponent` (shared/) — componente reutilizable 1-5 estrellas con modo lectura/edición
+- `ValoracionService` (core/) — consume endpoints de valoraciones (create, update, delete, getByPelicula)
+- Integrado en `MovieDetailPageComponent` — al hacer clic en estrella crea/modifica/elimina la valoración vía API
+- La puntuación del usuario se carga al abrir el detalle y persiste tras recargar
 
 ### Favoritos — **Completado** ✅
 

@@ -2,6 +2,20 @@
 
 Plataforma web para gestionar un catálogo de películas: exploración, valoraciones, favoritos, búsquedas y estadísticas.
 
+## Capturas de pantalla
+
+| Inicio | Catálogo | Detalle |
+|--------|----------|---------|
+| ![Login](MovieHubAngular/src/assets/screenshots/login.png) | ![Hero](MovieHubAngular/src/assets/screenshots/home-hero.png) | ![Detalle](MovieHubAngular/src/assets/screenshots/movie-detail.png) |
+
+| Catálogo (rows) | Géneros | Favoritos |
+|-----------------|---------|-----------|
+| ![Filas](MovieHubAngular/src/assets/screenshots/home-rows.png) | ![Por género](MovieHubAngular/src/assets/screenshots/genero.png) | ![Favoritos](MovieHubAngular/src/assets/screenshots/favoritos.png) |
+
+| Móvil |
+|-------|
+| ![Móvil](MovieHubAngular/src/assets/screenshots/mobile-nav.png) |
+
 ## Estado actual del proyecto
 
 ### Implementado
@@ -17,16 +31,17 @@ Plataforma web para gestionar un catálogo de películas: exploración, valoraci
 - **Angular Material:** Tema M3 custom oscuro con paleta roja Netflix, componentes: mat-toolbar, mat-card, mat-menu, mat-chip, mat-icon, mat-divider, mat-dialog, mat-snack-bar, mat-form-field
 - **StarRatingComponent:** Componente reutilizable de valoración 1-5 estrellas con soporte para crear, modificar y eliminar valoraciones. Integrado en detalle de película
 - **Environment:** Archivos `environment.ts` / `environment.prod.ts` con `apiUrlBase` centralizado y `fileReplacements`
-- **Arquitectura frontend:** Componentes standalone con lazy loading (`core/`, `shared/`, `features/`), `ChangeDetectionStrategy.OnPush`, señales, pipes puros, interceptor HTTP global
+- **Arquitectura frontend:** Componentes standalone con lazy loading (`core/`, `shared/`, `features/`), señales, pipes puros, interceptors HTTP globales
+- **Routing real con lazy loading:** Router de Angular como fuente de verdad, patrón shell + children con guards de autenticación. Navbar con `routerLink`/`routerLinkActive`. Carga diferida por página
 - **Auth JWT:** Autenticación activa con `AddAuthentication` + `AddJwtBearer`. Endpoints protegidos con `[Authorize]` (excepto register/login). Token vía `POST /api/Usuarios/login` y botón Authorize en Swagger
-- **Valoraciones (1-5):** CRUD completo con recálculo automático de puntuación media por película. Endpoints protegidos. Endpoint público para consultar valoraciones de una película
+- **Auth Frontend:** LoginPageComponent, RegisterDialogComponent (modal con validaciones por campo), AuthService con localStorage, AuthInterceptor con Bearer token, snack-bar de notificaciones, navbar con estado de sesión, guards funcionales (`authGuard`, `guestGuard`)
+- **Valoraciones (1-5):** CRUD completo con recálculo automático de puntuación media por película. Endpoints protegidos. Endpoint público para consultar valoraciones de una película. Frontend integrado en detalle con `StarRatingComponent`
 - **Favoritos:** Añadir/quitar con botón corazón en cards y detalle. Página "Mi lista" con grid de favoritas. Estado global via FavoritoStateService con update optimista
+- **Detalle de película:** MovieDetailPageComponent con hero, póster, director, descripción completa, valoración y botones de acción. Carga vía `movieService.getById()` usando el ID del route param
+- **TrailerDialog:** Modal para pegar URL de tráiler y abrir en nueva pestaña — integrado en hero y detalle
 - **Búsqueda + Filtros:** Endpoint `GET /api/peliculas` con params `?titulo=`, `?generoId=`, `?orden=` (puntuacion, anio)
 - **Rankings:** Endpoints `GET /api/peliculas/mejor-valoradas` (top 10) y `GET /api/peliculas/mas-recientes` (top 10)
 - **Estadísticas:** Endpoint `GET /api/peliculas/estadisticas` con total películas, media global, total géneros, total valoraciones
-- **Auth Frontend:** LoginPageComponent, RegisterDialogComponent (modal con validaciones por campo), AuthService con localStorage, AuthInterceptor con Bearer token, snack-bar de notificaciones, navbar con estado de sesión
-- **Detalle de película:** MovieDetailPageComponent con hero, póster, director, descripción completa y botones de acción
-- **TrailerDialog:** Modal para pegar URL de tráiler y abrir en nueva pestaña — integrado en hero y detalle
 
 ### Pendiente
 - **Tests:** Proyecto de tests no creado (backend xUnit + frontend Vitest)
@@ -56,17 +71,28 @@ MovieHub permite:
 
 ```
 MovieHub/
-├── MovieHubAPI/          # Backend - ASP.NET Core Web API
-│   └── Filters/          # AuthorizeCheckOperationFilter, ValidationFilter
-├── MovieHubAngular/      # Frontend - Angular (core/, shared/, features/)
-│   └── src/
-│       ├── environments/ # environment.ts + .prod.ts
-│   └── app/
-│           ├── core/     # Interceptors, layout, servicios singleton (auth, movie-state)
-│           ├── shared/   # Pipes, utilidades, constantes, tipos
-│           └── features/ # home/, genero/, auth/, peliculas/, loading/
-├── docs/                 # Guías por rol
-├── .github/workflows/    # CI SonarCloud
+├── MovieHubAPI/                    # Backend - ASP.NET Core Web API
+│   └── Filters/                    # AuthorizeCheckOperationFilter, ValidationFilter
+├── MovieHubAngular/                # Frontend - Angular 22 standalone
+│   └── src/app/
+│       ├── app.component.ts        # Bootstrap (solo <router-outlet />)
+│       ├── app.config.ts           # Providers globales
+│       ├── app.routes.ts           # Rutas con lazy loading + guards
+│       ├── core/                   # Guards, interceptors, layout, servicios
+│       │   ├── guards/             # auth.guard, guest.guard
+│       │   ├── interceptors/       # auth.interceptor, error.interceptor
+│       │   ├── layout/             # shell.component, navbar.component
+│       │   └── services/           # movie, genero, auth, favorito, valoracion
+│       ├── shared/                 # Pipes, utilidades, constantes, tipos
+│       ├── features/               # Páginas + componentes agrupados por dominio
+│       │   ├── home/               # pages/ + components/ (hero, cards, rows)
+│       │   ├── genero/             # pages/ + components/ (banner)
+│       │   ├── auth/               # pages/ + components/ (login, register)
+│       │   ├── peliculas/          # pages/ + components/ (detalle, favoritos, trailer)
+│       │   └── ui/                 # skeleton loading
+│       └── models/                 # Interfaces TypeScript
+├── docs/                           # Guías por rol
+├── .github/workflows/              # CI SonarCloud
 ├── README.md
 └── CONTRIBUTING.md
 ```

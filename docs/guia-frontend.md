@@ -13,63 +13,77 @@ Rol asignado: **[@claauudiiaacr](https://github.com/claauudiiaacr)** — rama `f
 - Angular Material (M3 con tema custom Netflix oscuro)
 - SCSS para estilos
 - Señales (Signals) para estado reactivo
+- Router de Angular con lazy loading + guards funcionales
 - Tests: Vitest (integrados por defecto en Angular CLI 22)
 
 ---
 
 ## Estructura de carpetas (actual)
 
-Actualmente el proyecto sigue esta estructura:
+Cada feature se organiza con subcarpetas `pages/` (componentes que son rutas) y `components/` (subcomponentes de UI):
 
 ```
 src/app/
-├── core/                      # Singleton services, interceptors, layout
+├── core/                          # Singleton services, guards, interceptors, layout
+│   ├── guards/
+│   │   ├── auth.guard.ts          # Redirige a /login si no hay sesión
+│   │   └── guest.guard.ts         # Redirige a /inicio si ya hay sesión
 │   ├── interceptors/
-│   │   ├── error.interceptor.ts
-│   │   └── auth.interceptor.ts
+│   │   ├── error.interceptor.ts   # Log de errores HTTP
+│   │   └── auth.interceptor.ts    # Añade Bearer token + logout en 401
 │   ├── layout/
-│   │   └── navbar.component.ts
+│   │   ├── shell.component.ts     # Layout con navbar + <router-outlet /> + footer
+│   │   └── navbar.component.ts    # Navbar con menú géneros, auth, routerLink
 │   └── services/
-│       ├── movie-state.service.ts
-│       ├── auth.service.ts
-│       ├── favorito-state.service.ts   # Estado global de favoritos (Set de IDs + toggle optimista)
-│       ├── valoracion.service.ts
-│       └── favorito.service.ts
-├── shared/                    # Componentes reutilizables, pipes, utilidades
+│       ├── movie.service.ts       # CRUD películas con paginación y endpoints específicos
+│       ├── genero.service.ts      # CRUD géneros
+│       ├── movie-state.service.ts # Estado global: todas las películas, héroe, filas por género
+│       ├── auth.service.ts        # Login/register/logout + localStorage + signal currentUser
+│       ├── favorito.service.ts    # HTTP para favoritos (getAll, add, remove)
+│       ├── favorito-state.service.ts  # Estado global de favoritos (Set de IDs + toggle optimista)
+│       └── valoracion.service.ts  # CRUD valoraciones
+├── shared/                        # Componentes reutilizables, pipes, utilidades
 │   ├── components/
-│   │   ├── star-rating.component.ts   # Valoración 1-5 estrellas
-│   │   └── favorito-button.component.ts # Botón corazón con toggle optimista
+│   │   ├── star-rating.component.ts      # Valoración 1-5 estrellas
+│   │   └── favorito-button.component.ts  # Botón corazón con toggle optimista
 │   ├── pipes/
 │   │   ├── truncate.pipe.ts
 │   │   └── rating-percent.pipe.ts
 │   ├── utils/
 │   │   └── track-by.ts
 │   ├── types/
-│   │   └── index.ts           # ActiveView, AuthResponse, LoginDto, RegisterDto
+│   │   └── index.ts              # AuthResponse, LoginDto, RegisterDto
 │   └── constants.ts
-├── features/                  # Carpetas por funcionalidad
-│   ├── home/
-│   │   ├── home-page.component.ts
-│   │   ├── hero-section.component.ts
-│   │   ├── movie-row.component.ts
-│   │   └── movie-card.component.ts
-│   ├── genero/
-│   │   ├── genero-page.component.ts
-│   │   └── genre-banner.component.ts
+├── features/                      # Carpetas por funcionalidad
 │   ├── auth/
-│   │   ├── login-page.component.ts
-│   │   └── register-dialog.component.ts
+│   │   ├── pages/
+│   │   │   └── login-page.component.ts
+│   │   └── components/
+│   │       └── register-dialog.component.ts
+│   ├── home/
+│   │   ├── pages/
+│   │   │   └── home-page.component.ts
+│   │   └── components/
+│   │       ├── hero-section.component.ts
+│   │       ├── movie-row.component.ts
+│   │       └── movie-card.component.ts
+│   ├── genero/
+│   │   ├── pages/
+│   │   │   └── genero-page.component.ts
+│   │   └── components/
+│   │       └── genre-banner.component.ts
 │   ├── peliculas/
-│   │   ├── movie-detail-page.component.ts
-│   │   ├── trailer-dialog.component.ts
-│   │   └── favoritos-page.component.ts  # Página "Mi lista"
-│   └── loading/
+│   │   ├── pages/
+│   │   │   ├── movie-detail-page.component.ts
+│   │   │   └── favoritos-page.component.ts
+│   │   └── components/
+│   │       └── trailer-dialog.component.ts
+│   └── ui/
 │       └── skeleton.component.ts
-├── services/                  # Servicios HTTP (movie.service, genero.service)
-├── models/                    # Interfaces TypeScript (Movie, Genero, etc.)
-├── app.component.ts
-├── app.config.ts
-└── app.routes.ts
+├── models/                        # Interfaces TypeScript (Movie, Genero, PaginatedResponse)
+├── app.component.ts               # Bootstrap: solo <router-outlet />
+├── app.config.ts                  # Providers globales (router, http, animaciones)
+└── app.routes.ts                  # Configuración de rutas con lazy loading
 ```
 
 Para crear una nueva feature, sigue este orden:
@@ -87,7 +101,7 @@ No al revés. Siempre empieza por los datos.
 Crea una interfaz TypeScript que refleje el DTO del backend:
 
 ```typescript
-// features/peliculas/models/pelicula.model.ts
+// models/pelicula.model.ts
 export interface Pelicula {
   id: number;
   titulo: string;
@@ -112,51 +126,56 @@ export interface CreatePelicula {
 
 ---
 
-## Paso 2: Servicio (`services/`)
+## Paso 2: Servicio (`core/services/`)
 
-Cada feature tiene su propio servicio que extiende de un servicio base o usa `HttpClient` directamente:
+Los servicios HTTP se colocan en `core/services/` y usan `inject()` con `providedIn: 'root'`:
 
 ```typescript
-// features/peliculas/services/pelicula.service.ts
+// core/services/pelicula.service.ts
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Pelicula } from '../models/pelicula.model';
+import { Pelicula } from '../../models/pelicula.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class PeliculaService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'https://localhost:7154/api/peliculas';
+  private readonly baseUrl = `${environment.apiUrlBase}/Peliculas`;
 
   getAll(): Observable<Pelicula[]> {
-    return this.http.get<Pelicula[]>(this.apiUrl);
+    return this.http.get<Pelicula[]>(this.baseUrl);
   }
 
   getById(id: number): Observable<Pelicula> {
-    return this.http.get<Pelicula>(`${this.apiUrl}/${id}`);
+    return this.http.get<Pelicula>(`${this.baseUrl}/${id}`);
   }
 
   create(data: CreatePelicula): Observable<Pelicula> {
-    return this.http.post<Pelicula>(this.apiUrl, data);
+    return this.http.post<Pelicula>(this.baseUrl, data);
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }
 ```
+
+> ⚠️ La ruta de importación de `environment` es `../../../environments/environment` desde `core/services/`.
 
 ---
 
 ## Paso 3: Componente
 
-Usa **señales** para el estado local y **OnPush** como estrategia de detección de cambios:
+Cada página que es una ruta va dentro de `pages/` y los subcomponentes reutilizables dentro de `components/`.
+
+Usa **señales** para el estado local:
 
 ```typescript
 // features/peliculas/pages/listado-peliculas/listado-peliculas.component.ts
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { PeliculaService } from '../../services/pelicula.service';
-import { Pelicula } from '../../models/pelicula.model';
+import { PeliculaService } from '../../../core/services/pelicula.service';
+import { Pelicula } from '../../../models/pelicula.model';
 
 @Component({
   selector: 'app-listado-peliculas',
@@ -183,72 +202,140 @@ export class ListadoPeliculasComponent implements OnInit {
 }
 ```
 
+### Convención de importaciones
+
+| El archivo está en... | Ruta a `models/` | Ruta a `core/services/` | Ruta a `shared/` |
+|---|---|---|---|
+| `features/xxx/pages/` | `../../../models/` | `../../../core/services/` | `../../../shared/` |
+| `features/xxx/components/` | `../../../models/` | `../../../core/services/` | `../../../shared/` |
+| `core/layout/` | `../../models/` | `../services/` | `../../shared/` |
+
 ---
 
 ## Paso 4: Rutas
 
-Cada feature tiene su archivo de rutas:
-
-```typescript
-// features/peliculas/peliculas.routes.ts
-import { Routes } from '@angular/router';
-
-export const PELICULAS_ROUTES: Routes = [
-  {
-    path: '',
-    loadComponent: () =>
-      import('./pages/listado-peliculas/listado-peliculas.component').then(
-        (c) => c.ListadoPeliculasComponent
-      ),
-  },
-  {
-    path: ':id',
-    loadComponent: () =>
-      import('./pages/detalle-pelicula/detalle-pelicula.component').then(
-        (c) => c.DetallePeliculaComponent
-      ),
-  },
-];
-```
-
-Y se registran en `app.routes.ts` con lazy loading (actualmente con rutas para carga diferida):
+Las rutas siguen un patrón de **shell + children** con guards de autenticación:
 
 ```typescript
 // app.routes.ts
 export const routes: Routes = [
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
   {
-    path: 'inicio',
+    path: 'login',
+    canActivate: [guestGuard],          // Solo accesible sin sesión
     loadComponent: () =>
-      import('./features/home/home-page.component').then(c => c.HomePageComponent)
+      import('./features/auth/pages/login-page.component').then(c => c.LoginPageComponent),
   },
   {
-    path: 'genero/:nombre',
+    path: '',
     loadComponent: () =>
-      import('./features/genero/genero-page.component').then(c => c.GeneroPageComponent)
-  }
+      import('./core/layout/shell.component').then(c => c.ShellComponent),
+    canActivate: [authGuard],           // Requiere sesión
+    children: [
+      {
+        path: 'inicio',
+        loadComponent: () =>
+          import('./features/home/pages/home-page.component').then(c => c.HomePageComponent),
+      },
+      {
+        path: 'genero/:nombre',
+        loadComponent: () =>
+          import('./features/genero/pages/genero-page.component').then(c => c.GeneroPageComponent),
+      },
+      {
+        path: 'pelicula/:id',
+        loadComponent: () =>
+          import('./features/peliculas/pages/movie-detail-page.component').then(c => c.MovieDetailPageComponent),
+      },
+      {
+        path: 'favoritos',
+        loadComponent: () =>
+          import('./features/peliculas/pages/favoritos-page.component').then(c => c.FavoritosPageComponent),
+      },
+      { path: '**', redirectTo: '/inicio' },
+    ],
+  },
 ];
+```
+
+### Cómo funciona el flujo de autenticación
+
+1. **Usuario no logueado** intenta acceder a `/inicio` → `authGuard` redirige a `/login`
+2. **Usuario no logueado** intenta acceder a `/login` → `guestGuard` permite el acceso
+3. **Usuario logueado** inicia sesión → `LoginPageComponent` llama a `router.navigate(['/inicio'])`
+4. **Usuario logueado** accede a `/login` → `guestGuard` redirige a `/inicio`
+5. **Usuario logueado** cierra sesión → `AuthService.logout()` navega a `/login`
+
+### Guards
+
+- **`authGuard`**: Comprueba `auth.isLoggedIn()`. Si no hay token, redirige a `/login`.
+- **`guestGuard`**: Comprueba que NO haya sesión. Si hay token, redirige a `/inicio`.
+
+### ShellComponent
+
+`ShellComponent` proporciona el layout común (navbar + router-outlet + footer) para todas las rutas autenticadas:
+
+```html
+<div class="app-shell">
+  <app-navbar />
+  <router-outlet />
+  <mat-divider />
+  <footer>...</footer>
+</div>
+```
+
+### lazy loading + params de ruta
+
+Gracias a `withComponentInputBinding()` en `app.config.ts`, los parámetros de ruta se vinculan automáticamente a inputs del componente:
+
+```typescript
+// Ruta: /pelicula/:id
+// MovieDetailPageComponent recibe automáticamente:
+readonly id = input.required<string>();    // "id" del route param
+```
+
+---
+
+## Auth Interceptor
+
+El interceptor `authInterceptor` (en `core/interceptors/`) añade el token JWT a cada petición y fuerza logout si recibe un 401:
+
+```typescript
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const auth = inject(AuthService);
+  const token = auth.getToken();
+
+  if (token) {
+    req = req.clone({
+      setHeaders: { Authorization: `Bearer ${token}` }
+    });
+  }
+
+  return next(req).pipe(
+    catchError((err) => {
+      if (err.status === 401) auth.logout();
+      return throwError(() => err);
+    })
+  );
+};
 ```
 
 ---
 
 ## Configurar HttpClient
 
-> ✅ `HttpClient` ya está configurado en `app.config.ts` con `provideHttpClient(withFetch())` y el interceptor global de errores.
+> ✅ `HttpClient` ya está configurado en `app.config.ts` con `provideHttpClient(withFetch(), withInterceptors([...]))`.
 
 ```typescript
-import { provideHttpClient, withFetch } from '@angular/common/http';
-
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(withFetch()),
-    provideRouter(routes),
     provideBrowserGlobalErrorListeners(),
+    provideRouter(routes, withComponentInputBinding()),
+    provideHttpClient(withFetch(), withInterceptors([errorInterceptor, authInterceptor])),
+    provideAnimations(),
   ],
 };
 ```
-
-No olvides instalar `@angular/common/http` si no está (debería venir incluido en `@angular/common`).
 
 ---
 
@@ -261,27 +348,30 @@ Componentes que se usan actualmente:
 | Componente | Uso |
 |---|---|
 | `<mat-toolbar>` | Barra de navegación (NavbarComponent) |
-| `<mat-card>` | Tarjetas de película (MovieCardComponent) |
+| `<mat-card>` | Tarjetas de película (MovieCardComponent, favoritos) |
 | `<mat-menu>` | Menú de géneros desktop + hamburguesa móvil |
 | `<mat-chip-set>` / `<mat-chip>` | Etiquetas de género en héroe y cards |
 | `<mat-icon>` | Iconos (search, play_arrow, account_circle, home, etc.) |
 | `<mat-divider>` | Separadores en footer y menú hamburguesa |
 | `<mat-button>` / `<mat-icon-button>` / `<mat-raised-button>` / `<mat-stroked-button>` | Botones de navegación y acciones |
-| `<mat-dialog>` | Modal de registro de usuario (RegisterDialogComponent) |
-| `<mat-snack-bar>` | Notificaciones toast en login y registro exitosos/fallidos |
+| `<mat-dialog>` | Modal de registro (RegisterDialogComponent) y tráiler (TrailerDialogComponent) |
+| `<mat-snack-bar>` | Notificaciones toast en login, registro, errores de favoritos |
 | `<mat-form-field>` + `<mat-input>` | Campos de formulario con validación en login y registro |
+| `<mat-tooltip>` | Tooltips en botones de acción |
 
 ---
 
 ## Errores frecuentes
 
 | Error | Causa | Solución |
-|---|---|---|---|
+|---|---|---|
 | `NullInjectorError: No provider for HttpClient` | No llamaste a `provideHttpClient()` en `app.config.ts` | Añadirlo |
 | `Cannot find a differ supporting object '...'` | Usaste `*ngFor` con un signal en lugar de llamarlo como función | Usar `@for` de Angular 17+ o `peliculas()` |
 | 404 al llamar a la API | La URL del backend es incorrecta o CORS no permite el origen | Verificar puerto (`7154`) y policy CORS en `Program.cs` |
 | El componente no aparece | No está importado en el template o la ruta no está registrada | Comprobar `imports` del componente y `app.routes.ts` |
 | `ng test` falla | Angular 22 usa Vitest por defecto | Asegúrate de tener `@angular/build` actualizado; el comando es `ng test` sin flags |
+| Error 401 en peticiones autenticadas | Token expirado o no enviado | El `authInterceptor` renueva/limpia la sesión automáticamente |
+| El navbar no muestra los géneros | `GeneroService` en navbar hace la petición al cargar el shell | Verificar que el endpoint `GET /api/Generos` funciona |
 
 ---
 
@@ -290,9 +380,9 @@ Componentes que se usan actualmente:
 | Comando | Qué hace |
 |---|---|
 | `ng serve` | Arrancar servidor de desarrollo (`http://localhost:4200`) |
-| `ng g c features/peliculas/pages/listado-peliculas` | Generar componente (standalone por defecto) |
-| `ng g s features/peliculas/services/pelicula` | Generar servicio |
-| `ng add @angular/material` | Añadir Angular Material |
+| `ng g c features/peliculas/pages/mi-pagina` | Generar página (componente de ruta) |
+| `ng g c features/peliculas/components/mi-componente` | Generar subcomponente de UI |
+| `ng g s core/services/mi-servicio` | Generar servicio en core |
 
 ---
 

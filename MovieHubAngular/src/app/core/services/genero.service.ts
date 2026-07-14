@@ -2,8 +2,8 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { Genero } from '../models/genero.model';
-import { environment } from '../../environments/environment';
+import { Genero } from '../../models/genero.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

@@ -5,9 +5,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { Movie } from '../../models/movie.model';
-import { TruncatePipe } from '../../shared/pipes/truncate.pipe';
-import { RatingPercentPipe } from '../../shared/pipes/rating-percent.pipe';
+import { Movie } from '../../../models/movie.model';
+import { TruncatePipe } from '../../../shared/pipes/truncate.pipe';
+import { RatingPercentPipe } from '../../../shared/pipes/rating-percent.pipe';
 
 @Component({
   selector: 'app-hero-section',

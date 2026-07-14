@@ -1,5 +1,6 @@
-import { Component, inject, input, output, signal, effect } from '@angular/core';
+import { Component, inject, input, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Location } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
@@ -8,12 +9,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { Movie } from '../../models/movie.model';
-import { StarRatingComponent } from '../../shared/components/star-rating.component';
-import { FavoritoButtonComponent } from '../../shared/components/favorito-button.component';
-import { ValoracionService } from '../../core/services/valoracion.service';
-import { AuthService } from '../../core/services/auth.service';
-import { TrailerDialogComponent } from './trailer-dialog.component';
+import { Movie } from '../../../models/movie.model';
+import { StarRatingComponent } from '../../../shared/components/star-rating.component';
+import { FavoritoButtonComponent } from '../../../shared/components/favorito-button.component';
+import { MovieService } from '../../../core/services/movie.service';
+import { ValoracionService } from '../../../core/services/valoracion.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { TrailerDialogComponent } from '../components/trailer-dialog.component';
 
 @Component({
   selector: 'app-movie-detail-page',
@@ -26,17 +28,26 @@ import { TrailerDialogComponent } from './trailer-dialog.component';
   styleUrl: './movie-detail-page.component.scss'
 })
 export class MovieDetailPageComponent {
+  private readonly movieService = inject(MovieService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
   private readonly valoracionService = inject(ValoracionService);
   private readonly auth = inject(AuthService);
+  private readonly location = inject(Location);
 
-  readonly movie = input.required<Movie>();
-  readonly back = output<void>();
+  readonly id = input.required<string>();
+  readonly movie = signal<Movie | null>(null);
+  readonly loading = signal(true);
   readonly userRating = signal(0);
   readonly currentRatingId = signal<number | null>(null);
 
   constructor() {
+    effect(() => {
+      const movieId = Number(this.id());
+      if (!movieId) return;
+      this.loadMovie(movieId);
+    });
+
     effect(() => {
       const m = this.movie();
       if (!m?.id) return;
@@ -44,6 +55,10 @@ export class MovieDetailPageComponent {
       this.userRating.set(0);
       this.loadUserRating(m.id);
     });
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   openTrailer(): void {
@@ -56,8 +71,9 @@ export class MovieDetailPageComponent {
   rateMovie(puntuacion: number): void {
     const ratingId = this.currentRatingId();
     const currentRating = this.userRating();
+    const m = this.movie();
+    if (!m) return;
 
-    // Misma puntuación → eliminar valoración
     if (ratingId && puntuacion === currentRating) {
       this.valoracionService.delete(ratingId).subscribe({
         next: () => {
@@ -77,7 +93,7 @@ export class MovieDetailPageComponent {
 
     const obs = ratingId
       ? this.valoracionService.update(ratingId, puntuacion)
-      : this.valoracionService.create({ peliculaId: this.movie().id, puntuacion });
+      : this.valoracionService.create({ peliculaId: m.id, puntuacion });
 
     obs.subscribe({
       next: (res) => {
@@ -88,6 +104,19 @@ export class MovieDetailPageComponent {
         if (err.error?.message) {
           this.snackBar.open(err.error.message, 'Cerrar', { duration: 4000 });
         }
+      }
+    });
+  }
+
+  private loadMovie(movieId: number): void {
+    this.loading.set(true);
+    this.movieService.getById(movieId).subscribe({
+      next: (m) => {
+        this.movie.set(m);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
       }
     });
   }

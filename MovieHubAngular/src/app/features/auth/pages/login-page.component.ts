@@ -1,16 +1,17 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { AuthService } from '../../core/services/auth.service';
-import { RegisterDialogComponent } from './register-dialog.component';
+import { AuthService } from '../../../core/services/auth.service';
+import { RegisterDialogComponent } from '../components/register-dialog.component';
 
 @Component({
   selector: 'app-login-page',
@@ -24,10 +25,9 @@ import { RegisterDialogComponent } from './register-dialog.component';
 })
 export class LoginPageComponent {
   private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
-
-  readonly loggedIn = output<void>();
 
   readonly form = new FormGroup({
     email: new FormControl('', {
@@ -55,7 +55,7 @@ export class LoginPageComponent {
     this.auth.login({ email, password }).subscribe({
       next: () => {
         this.snackBar.open('Sesión iniciada correctamente', '', { duration: 2000 });
-        this.loggedIn.emit();
+        this.router.navigate(['/inicio']);
       },
       error: (err: HttpErrorResponse) => {
         this.submitting = false;
@@ -71,9 +71,12 @@ export class LoginPageComponent {
   }
 
   openRegister(): void {
-    this.dialog.open(RegisterDialogComponent, {
+    const ref = this.dialog.open(RegisterDialogComponent, {
       width: '420px',
       disableClose: true
+    });
+    ref.afterClosed().subscribe((result) => {
+      if (result) this.router.navigate(['/inicio']);
     });
   }
 }
