@@ -1,49 +1,55 @@
-@let movie = this.movie();
-<section class="detail">
-  <header class="detail__nav">
-    <button mat-button class="detail__back" (click)="back.emit()">
-      <mat-icon>arrow_back</mat-icon>
-      Volver
-    </button>
-  </header>
-
-  <div class="detail__hero" [style.--detail-image]="'url(' + movie.imagen + ')'">
-    <div class="detail__scrim"></div>
-    <div class="detail__hero-content">
-      <h1 class="detail__title">{{ movie.titulo }}</h1>
-      <div class="detail__meta">
-        <app-star-rating [puntuacion]="movie.puntuacionMedia" [readonly]="true" size="small" />
-        <span>{{ movie.anioEstreno }}</span>
-        <span>{{ movie.duracion }} min</span>
-      </div>
-      <mat-chip-set class="detail__chips">
-        @for (genero of movie.generos; track genero) {
-          <mat-chip>{{ genero }}</mat-chip>
-        }
-      </mat-chip-set>
-    </div>
-  </div>
-
-  <div class="detail__body">
-    <div class="detail__poster-col">
-      <img class="detail__poster" [src]="movie.imagen" [alt]="movie.titulo" loading="eager" />
-      <div class="detail__rating-section">
-        <p class="detail__rating-label">Tu valoración</p>
-        <app-star-rating [puntuacion]="userRating()" size="medium" (rate)="rateMovie($event)" />
-      </div>
-    </div>
-    <div class="detail__info-col">
-      <p class="detail__director">
-        <strong>Director:</strong> {{ movie.director }}
-      </p>
-      <p class="detail__description">{{ movie.descripcion }}</p>
-      <div class="detail__actions">
-        <button mat-stroked-button (click)="openTrailer()" matTooltip="Añadir enlace al tráiler">
-          <mat-icon>play_arrow</mat-icon>
-          Reproducir
+@if (loading()) {
+  <p class="detail-loading">Cargando...</p>
+} @else {
+  @let movie = this.movie();
+  @if (movie) {
+    <section class="detail">
+      <header class="detail__nav">
+        <button mat-button class="detail__back" (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+          Volver
         </button>
-        <app-favorito-button [peliculaId]="movie.id" />
+      </header>
+
+      <div class="detail__hero" [style.--detail-image]="'url(' + movie.imagen + ')'">
+        <div class="detail__scrim"></div>
+        <div class="detail__hero-content">
+          <h1 class="detail__title">{{ movie.titulo }}</h1>
+          <div class="detail__meta">
+            <app-star-rating [puntuacion]="movie.puntuacionMedia" [readonly]="true" size="small" />
+            <span>{{ movie.anioEstreno }}</span>
+            <span>{{ movie.duracion }} min</span>
+          </div>
+          <mat-chip-set class="detail__chips">
+            @for (genero of movie.generos; track genero) {
+              <mat-chip>{{ genero }}</mat-chip>
+            }
+          </mat-chip-set>
+        </div>
       </div>
-    </div>
-  </div>
-</section>
+
+      <div class="detail__body">
+        <div class="detail__poster-col">
+          <img class="detail__poster" [src]="movie.imagen" [alt]="movie.titulo" loading="eager" />
+          <div class="detail__rating-section">
+            <p class="detail__rating-label">Tu valoración</p>
+            <app-star-rating [puntuacion]="userRating()" size="medium" (rate)="rateMovie($event)" />
+          </div>
+        </div>
+        <div class="detail__info-col">
+          <p class="detail__director">
+            <strong>Director:</strong> {{ movie.director }}
+          </p>
+          <p class="detail__description">{{ movie.descripcion }}</p>
+          <div class="detail__actions">
+            <button mat-stroked-button (click)="openTrailer()" matTooltip="Añadir enlace al tráiler">
+              <mat-icon>play_arrow</mat-icon>
+              Reproducir
+            </button>
+            <app-favorito-button [peliculaId]="movie.id" />
+          </div>
+        </div>
+      </div>
+    </section>
+  }
+}
