@@ -58,7 +58,9 @@
 </mat-toolbar>
 
 <mat-menu #menuHamburguesa="matMenu" class="hamburger-menu">
-  <button mat-menu-item (click)="homeClick.emit()">
+  <button mat-menu-item class="hamburger__item"
+          [class.hamburger__item--active]="activeView() === 'home'"
+          (click)="homeClick.emit()">
     <mat-icon>home</mat-icon>
     <span>Inicio</span>
   </button>
@@ -66,6 +68,7 @@
   <mat-divider class="hamburger__divider" />
 
   <button mat-menu-item class="hamburger__trigger"
+          [class.hamburger__item--active]="activeView() === 'genero'"
           [class.hamburger__trigger--expanded]="peliculasExpanded()"
           (click)="togglePeliculas.emit(); $event.stopPropagation()">
     <mat-icon>movie</mat-icon>
@@ -84,8 +87,8 @@
 
   <mat-divider class="hamburger__divider" />
 
-    <button mat-menu-item
-            [class.navbar__link--active]="activeView() === 'favoritos'"
+    <button mat-menu-item class="hamburger__item"
+            [class.hamburger__item--active]="activeView() === 'favoritos'"
             (click)="favoritosClick.emit()">
     <mat-icon>favorite_border</mat-icon>
     <span>Mi lista</span>
