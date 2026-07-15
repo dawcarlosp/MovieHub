@@ -13,9 +13,11 @@ Rol asignado: **[@pablorequinto95-dotcom](https://github.com/pablorequinto95-dot
 
 ---
 
-## 1. Tests del backend — **Pendiente de crear**
+## 1. Tests del backend — **Completado** ✅
 
-> ⚠️ El proyecto `MovieHubAPI.Tests` **no existe aún**. Está por crear.
+> ✅ El proyecto `MovieHubAPI.Tests` existe con **61 tests** (unitarios de servicios, validadores e integración de controladores). La ejecución se hace con `dotnet test MovieHubAPI.Tests`.
+
+---
 
 ### Tecnología (propuesta)
 
@@ -93,84 +95,68 @@ dotnet test --verbosity detailed                       # Más información en fa
 
 ---
 
-## 2. Tests del frontend
+## 2. Tests del frontend — **En progreso** 🟡
 
 ### Tecnología
 
-Angular 22 usa **Vitest** por defecto (el `tsconfig.spec.json` referencia `vitest/globals`). No hace falta instalar Karma, Jasmine ni Jest.
+Angular 22 usa **Vitest** (instalado y configurado). El proyecto tiene `vitest.config.ts` con:
+- `globals: true` (describe, it, expect disponibles globalmente)
+- `environment: 'jsdom'` (simulación de navegador)
+- `setupFiles: ['src/test-setup.ts']` (inicialización de TestBed)
 
-### Qué testear
+### Tests existentes
 
-| Tipo | Ejemplo |
-|---|---|
-| **Componentes** | "Al hacer clic en estrella, llama al servicio" |
-| **Servicios** | "getAll() devuelve lista de películas mockeadas" |
-| **Pipes/Filtros** | "filtroPorGenero filtra correctamente" |
-
-### Ejemplo con Vitest
-
-```typescript
-import { describe, it, expect, beforeEach } from 'vitest';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ListadoPeliculasComponent } from './listado-peliculas.component';
-
-describe('ListadoPeliculasComponent', () => {
-  let component: ListadoPeliculasComponent;
-  let fixture: ComponentFixture<ListadoPeliculasComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ListadoPeliculasComponent],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(ListadoPeliculasComponent);
-    component = fixture.componentInstance;
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
-```
+| Archivo | Tests | Estado |
+|---|---|---|
+| `core/services/auth.service.spec.ts` | 6 tests: login, register, logout, token, persistencia | ✅ |
 
 ### Cómo ejecutar los tests
 
-**Por terminal** *(Terminal normal)*:
-
 ```bash
-ng test
+npx vitest run              # Una vez
+npx vitest                  # Modo watch
+npx vitest run --reporter verbose  # Con detalle
 ```
+
+### Pendiente
+
+- Tests de servicios (movie, genero, favorito, valoracion)
+- Tests de componentes (star-rating, favorito-button, login, home, detail)
+- Tests de pipes (truncate, rating-percent)
 
 ---
 
-## 3. GitHub Actions (CI/CD) — Configurado con SonarCloud
+## 3. GitHub Actions (CI/CD) — Configurado
 
-> ✅ Ya existe el archivo `.github/workflows/build.yml` con análisis de SonarCloud para el backend.
-> Se ejecuta en pushes y PRs a `main` usando `windows-latest`, .NET 10 y Node.js 24.
+> ✅ Pipeline completa con **2 jobs**: backend (build + test) y frontend (build + test) en cada push/PR a `main`.
 
 ### Pipeline actual (`.github/workflows/build.yml`)
 
-El workflow actual analiza el backend con SonarCloud en cada push/PR a `main`:
-
 ```yaml
-name: SonarCloud Full Stack Analysis
+name: CI
 on:
   push: { branches: [main] }
   pull_request: { branches: [main] }
 jobs:
-  build:
+  backend:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v3 { with: { java-version: 17 } }
       - uses: actions/setup-dotnet@v3 { with: { dotnet-version: '10.0.x' } }
-      - uses: actions/setup-node@v3 { with: { node-version: '24' } }
       - run: dotnet restore MovieHubAPI/MovieHubAPI.slnx
       - run: dotnet build MovieHubAPI/MovieHubAPI.slnx
-      - uses: SonarSource/sonarcloud-github-action
-```
+      - run: dotnet test MovieHubAPI.Tests --verbosity normal
 
-> 💡 Pendiente añadir test coverage y compilación del frontend a la pipeline.
+  frontend:
+    runs-on: windows-latest
+    defaults: { run: { working-directory: MovieHubAngular } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3 { with: { node-version: '22' } }
+      - run: npm ci
+      - run: npx ng build --configuration production
+      - run: npx vitest run --reporter verbose
+```
 
 ---
 

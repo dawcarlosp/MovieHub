@@ -1,4 +1,4 @@
-name: SonarCloud Full Stack Analysis
+name: CI
 
 on:
   push:
@@ -10,19 +10,12 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  build:
-    name: Build and analyze
+  backend:
+    name: Backend - Build & Test
     runs-on: windows-latest
 
     steps:
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: 17
-          distribution: "zulu"
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -31,46 +24,35 @@ jobs:
         with:
           dotnet-version: "10.0.x"
 
-      - name: Setup Node.js (for Angular)
+      - name: Restore
+        run: dotnet restore MovieHubAPI/MovieHubAPI.slnx
+
+      - name: Build
+        run: dotnet build MovieHubAPI/MovieHubAPI.slnx --configuration Release
+
+      - name: Test
+        run: dotnet test MovieHubAPI.Tests --configuration Release --verbosity normal
+
+  frontend:
+    name: Frontend - Build & Test
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: MovieHubAngular
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "24"
+          node-version: "22"
 
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v3
-        with:
-          path: ~\sonar\cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Cache SonarCloud scanner
-        id: cache-sonar-scanner
-        uses: actions/cache@v3
-        with:
-          path: .\.sonar\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
+      - name: Build
+        run: npx ng build --configuration production
 
-      - name: Install SonarCloud scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: powershell
-        run: |
-          New-Item -ItemType Directory -Force -Path .\.sonar\scanner
-          dotnet tool install dotnet-sonarscanner --tool-path .\.sonar\scanner
-
-      # --- AQUÍ EMPIEZA EL ANÁLISIS ---
-      - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
-        run: |
-          # 1. Inicio del Scanner desde la raíz del repositorio
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Proyecto-academico-Copermatica_MovieHub" /o:"proyecto-academico-copermatica" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="**/node_modules/**,**/bin/**,**/obj/**,**/.vs/**"
-
-          # 2. Restaurar y Compilar apuntando directamente a la solución sin cambiar de carpeta (Evita Error Causa 3)
-          dotnet restore MovieHubAPI/MovieHubAPI.slnx
-          dotnet build MovieHubAPI/MovieHubAPI.slnx --configuration Release
-
-          # 3. Cierre y envío de datos a SonarCloud ejecutado en la misma ruta raíz
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+      - name: Test
+        run: npx vitest run --reporter verbose
