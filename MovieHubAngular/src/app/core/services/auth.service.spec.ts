@@ -25,7 +25,7 @@ describe('AuthService', () => {
 
   it('al iniciar sin token, currentUser es null', () => {
     expect(service.currentUser()).toBeNull();
-    expect(service.isLoggedIn()).toBeFalse();
+    expect(service.isLoggedIn()).toBe(false);
   });
 
   it('login llama al endpoint y guarda el token', () => {
@@ -36,7 +36,7 @@ describe('AuthService', () => {
     const req = httpMock.expectOne(req => req.url.includes('/Usuarios/login') && req.method === 'POST');
     req.flush(mockResponse);
 
-    expect(service.isLoggedIn()).toBeTrue();
+    expect(service.isLoggedIn()).toBe(true);
     expect(service.getToken()).toBe('abc');
     expect(service.currentUser()?.userName).toBe('test');
   });
@@ -49,7 +49,7 @@ describe('AuthService', () => {
     const req = httpMock.expectOne(req => req.url.includes('/Usuarios/register') && req.method === 'POST');
     req.flush(mockResponse);
 
-    expect(service.isLoggedIn()).toBeTrue();
+    expect(service.isLoggedIn()).toBe(true);
     expect(service.getToken()).toBe('xyz');
   });
 
@@ -59,7 +59,7 @@ describe('AuthService', () => {
 
     service.logout();
 
-    expect(service.isLoggedIn()).toBeFalse();
+    expect(service.isLoggedIn()).toBe(false);
     expect(service.currentUser()).toBeNull();
     expect(localStorage.getItem('mh_token')).toBeNull();
   });
@@ -69,12 +69,22 @@ describe('AuthService', () => {
   });
 
   it('al reinstanciar con token en localStorage, recupera sesión', () => {
+    localStorage.clear();
     localStorage.setItem('mh_token', 'abc');
     localStorage.setItem('mh_user', JSON.stringify({ token: 'abc', userName: 'persisted', email: 'p@test.com' }));
 
-    const newService = TestBed.inject(AuthService);
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [AuthService, provideHttpClient(), provideHttpClientTesting(), { provide: Router, useValue: { navigate: () => {} } }],
+    });
+    const freshService = TestBed.inject(AuthService);
+    const freshHttpMock = TestBed.inject(HttpTestingController);
 
-    expect(newService.isLoggedIn()).toBeTrue();
-    expect(newService.currentUser()?.userName).toBe('persisted');
+    expect(freshService.isLoggedIn()).toBe(true);
+    expect(freshService.currentUser()?.userName).toBe('persisted');
+
+    freshHttpMock.verify();
+    localStorage.clear();
+    TestBed.resetTestingModule();
   });
 });
