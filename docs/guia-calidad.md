@@ -15,7 +15,7 @@ Rol asignado: **[@pablorequinto95-dotcom](https://github.com/pablorequinto95-dot
 
 ## 1. Tests del backend — **Completado** ✅
 
-> ✅ El proyecto `MovieHubAPI.Tests` existe con **61 tests** (unitarios de servicios, validadores e integración de controladores). La ejecución se hace con `dotnet test MovieHubAPI.Tests`.
+> ✅ El proyecto `MovieHubAPI.Tests` existe con **61 tests** (unitarios de servicios, validadores e integración de controladores). La ejecución se hace con `dotnet test MovieHubAPI/MovieHubAPI.Tests`.
 
 ---
 
@@ -28,15 +28,18 @@ Rol asignado: **[@pablorequinto95-dotcom](https://github.com/pablorequinto95-dot
 ### Estructura (propuesta)
 
 ```
-MovieHubAPI.Tests/
-├── Services/
-│   ├── PeliculaServiceTests.cs
-│   └── ValoracionServiceTests.cs
-├── Controllers/
-│   ├── PeliculasControllerTests.cs
-│   └── ...
-└── Validators/
-    └── CreatePeliculaValidatorTests.cs
+MovieHubAPI/MovieHubAPI.Tests/
+├── Unitarias/
+│   ├── Services/
+│   │   ├── PeliculaServiceTests.cs
+│   │   ├── GeneroServiceTests.cs
+│   │   ├── FavoritoServiceTests.cs
+│   │   └── ValoracionServiceTests.cs
+│   └── Validators/
+│       ├── CreatePeliculaValidatorTests.cs
+│       └── CreateGeneroValidatorTests.cs
+└── Integracion/
+    └── PeliculasControllerTests.cs
 ```
 
 ### Qué testear
@@ -87,7 +90,7 @@ public class PeliculaServiceTests
 **Por terminal** *(Terminal normal — View → Terminal en VS, Ctrl+` en VS Code, PowerShell, CMD o Windows Terminal)*:
 
 ```bash
-cd MovieHubAPI.Tests
+cd MovieHubAPI/MovieHubAPI.Tests
 dotnet test
 dotnet test --filter "FullyQualifiedName~Valoracion"   # Filtrar por nombre
 dotnet test --verbosity detailed                       # Más información en fallos
@@ -145,7 +148,7 @@ jobs:
       - uses: actions/setup-dotnet@v3 { with: { dotnet-version: '10.0.x' } }
       - run: dotnet restore MovieHubAPI/MovieHubAPI.slnx
       - run: dotnet build MovieHubAPI/MovieHubAPI.slnx
-      - run: dotnet test MovieHubAPI.Tests --verbosity normal
+      - run: dotnet test MovieHubAPI/MovieHubAPI.Tests --verbosity normal
 
   frontend:
     runs-on: windows-latest
@@ -196,7 +199,7 @@ Si ves que una guía se queda obsoleta o alguien comete un error que no estaba c
 
 | Comando | Consola | Qué hace |
 |---|---|---|---|
-| `dotnet test MovieHubAPI.Tests` | Terminal normal | Ejecutar tests backend (cuando exista el proyecto) |
+| `dotnet test MovieHubAPI/MovieHubAPI.Tests` | Terminal normal | Ejecutar tests backend |
 | `ng test` | Terminal normal | Ejecutar tests frontend (Vitest) |
 | `dotnet ef migrations has-pending-model-changes` | Package Manager Console | Verificar si faltan migraciones |
 
