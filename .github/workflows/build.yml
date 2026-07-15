@@ -31,7 +31,7 @@ jobs:
         run: dotnet build MovieHubAPI/MovieHubAPI.slnx --configuration Release
 
       - name: Test
-        run: dotnet test MovieHubAPI.Tests --configuration Release --verbosity normal
+        run: dotnet test MovieHubAPI/MovieHubAPI.Tests --configuration Release --verbosity normal
 
   frontend:
     name: Frontend - Build & Test
