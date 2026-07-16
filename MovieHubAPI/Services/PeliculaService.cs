@@ -47,6 +47,54 @@ namespace MovieHubAPI.Services
             );
         }
 
+        public async Task<PaginadosDto<PeliculaDto>> BuscarAsync(string? q, int? generoId, int? anioMin, int? anioMax, string? orden, int page, int pageSize)
+        {
+            var query = _context.Peliculas
+                .Include(p => p.PeliculaGeneros).ThenInclude(pg => pg.Genero)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                var term = q.ToLower();
+                query = query.Where(p =>
+                    p.Titulo.ToLower().Contains(term) ||
+                    (p.Descripcion != null && p.Descripcion.ToLower().Contains(term)) ||
+                    (p.Director != null && p.Director.ToLower().Contains(term))
+                );
+            }
+
+            if (generoId.HasValue)
+                query = query.Where(p => p.PeliculaGeneros.Any(pg => pg.GeneroId == generoId.Value));
+
+            if (anioMin.HasValue)
+                query = query.Where(p => p.Anio >= anioMin.Value);
+
+            if (anioMax.HasValue)
+                query = query.Where(p => p.Anio <= anioMax.Value);
+
+            query = orden switch
+            {
+                "puntuacion" => query.OrderByDescending(p => p.PuntuacionMedia),
+                "anio" => query.OrderByDescending(p => p.Anio),
+                _ => query.OrderBy(p => p.Titulo)
+            };
+
+            var totalCount = await query.CountAsync();
+
+            var peliculas = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new PaginadosDto<PeliculaDto>(
+                peliculas.Adapt<List<PeliculaDto>>(),
+                page,
+                pageSize,
+                totalCount,
+                (int)Math.Ceiling(totalCount / (double)pageSize)
+            );
+        }
+
         public async Task<PeliculaDto?> GetByIdAsync(int id)
         {
             var pelicula = await _context.Peliculas
