@@ -74,26 +74,24 @@ DELETE /api/favoritos/{peliculaId}       // quitar de favoritos (requiere auth)
 - `FavoritoStateService` — estado global con `Set<number>` de IDs, carga al iniciar sesión
 - `FavoritosPageComponent` — página "Mi lista" con grid de favoritas, navegación desde navbar
 
-### Búsqueda por título + filtros — **Backend implementado** 🟢
+### Búsqueda por título + filtros — **Completado** ✅
 
 **Backend:**
 
 ```csharp
 GET /api/peliculas?titulo=batman&generoId=3&orden=puntuacion&page=1&pageSize=10
+GET /api/peliculas/buscar?q=batman&generoId=3&anioMin=2000&anioMax=2025&orden=puntuacion&page=1&pageSize=20
 ```
 
-Un solo endpoint con parámetros opcionales. El servicio aplica los filtros en memoria con LINQ.
+Dos endpoints con parámetros opcionales. El servicio aplica los filtros en memoria con LINQ.
 
-> Este endpoint incluye paginación integrada. Consulta `docs/guia-backend.md` para más detalles sobre el formato de respuesta paginado.
+> Estos endpoints incluyen paginación integrada. Consulta `docs/guia-backend.md` para más detalles sobre el formato de respuesta paginado.
 
 **Frontend:**
 
-```
-Componente buscador (shared/)
-  → Input de texto + selector de género (Angular Material)
-  → Al escribir o seleccionar → llama al endpoint con query params
-  → Muestra resultados en el listado
-```
+- `BuscarPageComponent` en `features/buscar/pages/` — página de resultados con input de búsqueda
+- Ruta `/buscar?q=` registrada en `app.routes.ts` con lazy loading
+- Llama a `GET /api/peliculas/buscar` con el término y muestra resultados en grid
 
 ### Rankings y estadísticas — **Backend implementado** 🟢
 
