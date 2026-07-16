@@ -28,9 +28,9 @@ src/app/
 │   ├── guards/
 │   │   ├── auth.guard.ts          # Redirige a /login si no hay sesión
 │   │   └── guest.guard.ts         # Redirige a /inicio si ya hay sesión
-│   ├── interceptors/
-│   │   ├── error.interceptor.ts   # Log de errores HTTP
-│   │   └── auth.interceptor.ts    # Añade Bearer token + logout en 401
+    │   ├── interceptors/
+    │   │   ├── auth-error.interceptor.ts   # Log de errores HTTP + logout en 401 (excepto auth)
+    │   │   └── auth.interceptor.ts         # Añade Bearer token a las peticiones
 │   ├── layout/
 │   │   ├── shell.component.ts     # Layout con navbar + <router-outlet /> + footer
 │   │   └── navbar.component.ts    # Navbar con menú géneros, auth, routerLink
@@ -43,9 +43,10 @@ src/app/
 │       ├── favorito-state.service.ts  # Estado global de favoritos (Set de IDs + toggle optimista)
 │       └── valoracion.service.ts  # CRUD valoraciones
 ├── shared/                        # Componentes reutilizables, pipes, utilidades
-│   ├── components/
-│   │   ├── star-rating.component.ts      # Valoración 1-5 estrellas
-│   │   └── favorito-button.component.ts  # Botón corazón con toggle optimista
+    │   ├── components/
+    │   │   ├── star-rating.component.ts      # Valoración 1-5 estrellas
+    │   │   ├── favorito-button.component.ts  # Botón corazón con toggle optimista
+    │   │   └── confirm-dialog.component.ts   # Diálogo de confirmación (cerrar sesión)
 │   ├── pipes/
 │   │   ├── truncate.pipe.ts
 │   │   └── rating-percent.pipe.ts
@@ -330,8 +331,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withFetch(), withInterceptors([errorInterceptor, authInterceptor])),
+    provideRouter(routes, withComponentInputBinding(), withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
+    provideHttpClient(withFetch(), withInterceptors([authErrorInterceptor, authInterceptor])),
     provideAnimations(),
   ],
 };
