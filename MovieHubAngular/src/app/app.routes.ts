@@ -34,10 +34,17 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'buscar',
+        loadComponent: () =>
+          import('./features/buscar/pages/buscar-page.component').then(
+            (c) => c.BuscarPageComponent
+          ),
+      },
+      {
         path: 'favoritos',
         loadComponent: () =>
           import('./features/peliculas/pages/favoritos-page.component').then(
-            (c) => c.FavoritosPageComponent,
+            (c) => c.FavoritosPageComponent
           ),
       },
       { path: '**', redirectTo: '/inicio' },
