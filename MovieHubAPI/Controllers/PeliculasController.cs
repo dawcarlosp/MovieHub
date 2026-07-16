@@ -40,6 +40,25 @@ namespace MovieHubAPI.Controllers
             return Ok(resultado);
         }
 
+        [HttpGet("buscar")]
+        [EndpointSummary("Buscar películas")]
+        [EndpointDescription("Busca películas por título, descripción o director con filtros y paginación.")]
+        [ProducesResponseType<PaginadosDto<PeliculaDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<PaginadosDto<PeliculaDto>>> Buscar(
+            [Description("Término de búsqueda")][FromQuery] string? q = null,
+            [Description("Filtrar por género")][FromQuery] int? generoId = null,
+            [Description("Año mínimo")][FromQuery] int? anioMin = null,
+            [Description("Año máximo")][FromQuery] int? anioMax = null,
+            [Description("Ordenar por (puntuacion, anio, titulo)")][FromQuery] string? orden = null,
+            [Description("Número de página")][FromQuery] int page = 1,
+            [Description("Elementos por página (máx 50)")][FromQuery] int pageSize = 20)
+        {
+            if (pageSize > 50) pageSize = 50;
+            if (page < 1) page = 1;
+            return Ok(await _peliculaService.BuscarAsync(q, generoId, anioMin, anioMax, orden, page, pageSize));
+        }
+
         [HttpGet("mejor-valoradas")]
         [EndpointSummary("Top 10 mejor valoradas")]
         [ProducesResponseType<List<PeliculaDto>>(StatusCodes.Status200OK)]
